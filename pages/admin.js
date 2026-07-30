@@ -80,7 +80,7 @@ export default function Admin() {
       formData.append('folder', 'famous-gifts');
 
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/Root/auto/upload`,
+        `https://api.cloudinary.com/v1_1/k94lgst7/auto/upload`,
         {
           method: 'POST',
           body: formData,
