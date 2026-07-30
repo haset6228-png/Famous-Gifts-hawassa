@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '../lib/supabase';
 import Link from 'next/link';
+import { supabase } from '../lib/supabase';
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
@@ -32,28 +32,25 @@ export default function Home() {
     },
   ];
 
-  import { supabase } from '../lib/supabase';
+  useEffect(() => {
+    setIsClient(true);
+    loadProducts();
+  }, []);
 
-// Then in the component:
-useEffect(() => {
-  setIsClient(true);
-  loadProducts();
-}, []);
-
-const loadProducts = async () => {
-  try {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .order('createdAt', { ascending: false });
-    
-    if (!error && data) {
-      setProducts(data);
+  const loadProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('createdAt', { ascending: false });
+      
+      if (!error && data) {
+        setProducts(data);
+      }
+    } catch (error) {
+      console.error('Error loading products:', error);
     }
-  } catch (error) {
-    console.error('Error loading products:', error);
-  }
-};
+  };
 
   useEffect(() => {
     if (isClient) {
@@ -88,7 +85,7 @@ const loadProducts = async () => {
       fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
     }}>
       
-      {/* Navigation Bar - Mobile Optimized */}
+      {/* Navigation Bar */}
       <motion.nav 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -136,7 +133,7 @@ const loadProducts = async () => {
         </a>
       </motion.nav>
 
-      {/* Hero Carousel - Mobile Optimized */}
+      {/* Hero Carousel */}
       <div style={{
         position: 'relative',
         margin: '12px 12px 20px',
@@ -226,7 +223,6 @@ const loadProducts = async () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Slide Dots */}
         <div style={{
           position: 'absolute',
           bottom: '10px',
@@ -255,7 +251,7 @@ const loadProducts = async () => {
         </div>
       </div>
 
-      {/* Products Section - Mobile Optimized */}
+      {/* Products Section */}
       <div id="products" style={{ padding: '10px 12px 40px' }}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <h2 style={{ 
@@ -412,7 +408,7 @@ const loadProducts = async () => {
         )}
       </div>
 
-      {/* Footer - Mobile Optimized */}
+      {/* Footer */}
       <motion.footer
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
