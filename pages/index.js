@@ -7,7 +7,6 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Replace these with your own images in public/images/
   const slides = [
     {
       id: 1,
@@ -71,7 +70,7 @@ export default function Home() {
       fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
     }}>
       
-      {/* Navigation Bar */}
+      {/* Navigation Bar - Mobile Optimized */}
       <motion.nav 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -79,7 +78,7 @@ export default function Home() {
         style={{
           background: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(20px)',
-          padding: '18px 50px',
+          padding: '12px 16px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -90,55 +89,43 @@ export default function Home() {
           borderBottom: '2px solid rgba(255, 105, 180, 0.2)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '2rem' }}>🎁</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '1.5rem' }}>🎁</span>
           <div>
-            <h1 style={{ color: '#FF1493', margin: 0, fontSize: '1.5rem', fontWeight: '700' }}>Famous Gifts</h1>
-            <p style={{ color: '#FF69B4', margin: 0, fontSize: '0.7rem', letterSpacing: '2px' }}>HAWASSA</p>
+            <h1 style={{ color: '#FF1493', margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>Famous Gifts</h1>
+            <p style={{ color: '#FF69B4', margin: 0, fontSize: '0.55rem', letterSpacing: '1px' }}>HAWASSA</p>
           </div>
         </div>
         
-        {/* Call Button */}
         <a 
           href="tel:+251909495969" 
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: '6px',
             background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
             color: 'white',
-            padding: '10px 20px',
+            padding: '8px 14px',
             borderRadius: '50px',
             textDecoration: 'none',
             fontWeight: '600',
-            fontSize: '0.95rem',
+            fontSize: '0.8rem',
             boxShadow: '0 5px 20px rgba(255, 20, 147, 0.3)',
-            transition: 'all 0.3s ease',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.transform = 'scale(1.05)';
-            e.target.style.boxShadow = '0 8px 30px rgba(255, 20, 147, 0.4)';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = 'scale(1)';
-            e.target.style.boxShadow = '0 5px 20px rgba(255, 20, 147, 0.3)';
           }}
         >
-          <span style={{ fontSize: '1.2rem' }}>📞</span>
-          Call Us
+          <span style={{ fontSize: '1rem' }}>📞</span>
+          Call
         </a>
       </motion.nav>
 
-      {/* Hero Carousel */}
+      {/* Hero Carousel - Mobile Optimized */}
       <div style={{
         position: 'relative',
-        margin: '20px 50px 40px',
-        borderRadius: '24px',
+        margin: '12px 12px 20px',
+        borderRadius: '16px',
         overflow: 'hidden',
-        height: '480px',
-        boxShadow: '0 20px 60px rgba(255, 20, 147, 0.25)',
+        height: '250px',
+        boxShadow: '0 10px 40px rgba(255, 20, 147, 0.2)',
       }}>
         <AnimatePresence mode='wait'>
           <motion.div
@@ -162,7 +149,7 @@ export default function Home() {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(135deg, rgba(255,20,147,0.4), rgba(0,0,0,0.25))',
+              background: 'linear-gradient(135deg, rgba(255,20,147,0.5), rgba(0,0,0,0.3))',
             }} />
 
             <div style={{
@@ -172,28 +159,29 @@ export default function Home() {
               transform: 'translate(-50%, -50%)',
               textAlign: 'center',
               color: 'white',
-              width: '80%',
+              width: '90%',
               maxWidth: '700px',
-              zIndex: 2
+              zIndex: 2,
+              padding: '10px'
             }}>
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
                 <h2 style={{
-                  fontSize: '3rem',
+                  fontSize: '1.6rem',
                   fontWeight: '800',
-                  margin: '10px 0',
-                  textShadow: '0 2px 30px rgba(0,0,0,0.2)'
+                  margin: '5px 0',
+                  textShadow: '0 2px 20px rgba(0,0,0,0.2)'
                 }}>
                   {slides[currentSlide].title}
                 </h2>
                 <p style={{
-                  fontSize: '1.2rem',
+                  fontSize: '0.85rem',
                   opacity: 0.95,
-                  marginBottom: '25px',
-                  textShadow: '0 2px 20px rgba(0,0,0,0.15)'
+                  marginBottom: '15px',
+                  textShadow: '0 2px 15px rgba(0,0,0,0.15)'
                 }}>
                   {slides[currentSlide].subtitle}
                 </p>
@@ -204,12 +192,12 @@ export default function Home() {
                     background: 'white',
                     color: '#FF1493',
                     border: 'none',
-                    padding: '14px 40px',
+                    padding: '10px 28px',
                     borderRadius: '50px',
-                    fontSize: '1.1rem',
+                    fontSize: '0.85rem',
                     fontWeight: '700',
                     cursor: 'pointer',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+                    boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
                   }}
                   onClick={() => document.getElementById('products').scrollIntoView({ behavior: 'smooth' })}
                 >
@@ -223,11 +211,11 @@ export default function Home() {
         {/* Slide Dots */}
         <div style={{
           position: 'absolute',
-          bottom: '20px',
+          bottom: '10px',
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
-          gap: '12px',
+          gap: '8px',
           zIndex: 10
         }}>
           {slides.map((_, index) => (
@@ -235,8 +223,8 @@ export default function Home() {
               key={index}
               onClick={() => goToSlide(index)}
               style={{
-                width: currentSlide === index ? '30px' : '12px',
-                height: '12px',
+                width: currentSlide === index ? '24px' : '8px',
+                height: '8px',
                 borderRadius: '10px',
                 border: 'none',
                 background: currentSlide === index ? 'white' : 'rgba(255,255,255,0.5)',
@@ -247,79 +235,20 @@ export default function Home() {
             />
           ))}
         </div>
-
-        {/* Navigation Arrows */}
-        <button
-          onClick={() => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)}
-          style={{
-            position: 'absolute',
-            left: '15px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'rgba(255,255,255,0.2)',
-            backdropFilter: 'blur(10px)',
-            color: 'white',
-            border: 'none',
-            width: '50px',
-            height: '50px',
-            borderRadius: '50%',
-            fontSize: '1.8rem',
-            cursor: 'pointer',
-            zIndex: 10,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.4)'}
-          onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
-        >
-          ‹
-        </button>
-        <button
-          onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
-          style={{
-            position: 'absolute',
-            right: '15px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'rgba(255,255,255,0.2)',
-            backdropFilter: 'blur(10px)',
-            color: 'white',
-            border: 'none',
-            width: '50px',
-            height: '50px',
-            borderRadius: '50%',
-            fontSize: '1.8rem',
-            cursor: 'pointer',
-            zIndex: 10,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.4)'}
-          onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
-        >
-          ›
-        </button>
       </div>
 
-      {/* Products Section */}
-      <div id="products" style={{ padding: '20px 50px 60px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{ 
-              fontSize: '2.2rem', 
-              color: '#333', 
-              marginBottom: '8px',
-              fontWeight: '600'
-            }}
-          >
+      {/* Products Section - Mobile Optimized */}
+      <div id="products" style={{ padding: '10px 12px 40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <h2 style={{ 
+            fontSize: '1.5rem', 
+            color: '#333', 
+            marginBottom: '4px',
+            fontWeight: '600'
+          }}>
             Our Collection 🎀
-          </motion.h2>
-          <p style={{ color: '#888', fontSize: '1rem' }}>
+          </h2>
+          <p style={{ color: '#888', fontSize: '0.85rem' }}>
             {products.length} products available
           </p>
         </div>
@@ -327,38 +256,38 @@ export default function Home() {
         {products.length === 0 ? (
           <div style={{ 
             textAlign: 'center', 
-            padding: '80px 40px', 
+            padding: '40px 20px', 
             background: 'white', 
-            borderRadius: '20px',
-            boxShadow: '0 5px 30px rgba(0,0,0,0.05)'
+            borderRadius: '16px',
+            boxShadow: '0 5px 20px rgba(0,0,0,0.05)'
           }}>
-            <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🎁</div>
-            <p style={{ fontSize: '1.3rem', color: '#555' }}>No products available yet.</p>
-            <p style={{ color: '#999' }}>Check back soon for amazing gifts!</p>
+            <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🎁</div>
+            <p style={{ fontSize: '1rem', color: '#555' }}>No products available yet.</p>
+            <p style={{ color: '#999', fontSize: '0.85rem' }}>Check back soon for amazing gifts!</p>
           </div>
         ) : (
           <div style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
-            gap: '30px',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(155px, 1fr))', 
+            gap: '14px',
             maxWidth: '1400px',
             margin: '0 auto'
           }}>
             {products.map((p, index) => (
               <Link href={`/product/${p.id}`} key={p.id} style={{ textDecoration: 'none' }}>
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.08 }}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
                   whileHover={{ 
-                    y: -8,
-                    boxShadow: '0 20px 50px rgba(255, 105, 180, 0.25)'
+                    y: -5,
+                    boxShadow: '0 15px 40px rgba(255, 105, 180, 0.2)'
                   }}
                   style={{
                     background: 'white',
-                    borderRadius: '18px',
+                    borderRadius: '14px',
                     overflow: 'hidden',
-                    boxShadow: '0 5px 25px rgba(0,0,0,0.06)',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
                     border: '1px solid rgba(255, 105, 180, 0.08)'
@@ -366,7 +295,7 @@ export default function Home() {
                 >
                   <div style={{ 
                     position: 'relative',
-                    height: '260px',
+                    height: '160px',
                     background: '#f8f8f8',
                     overflow: 'hidden'
                   }}>
@@ -380,8 +309,6 @@ export default function Home() {
                           objectFit: 'cover',
                           transition: 'transform 0.5s ease'
                         }}
-                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
                       />
                     ) : p.image ? (
                       <img 
@@ -393,8 +320,6 @@ export default function Home() {
                           objectFit: 'cover',
                           transition: 'transform 0.5s ease'
                         }}
-                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
                       />
                     ) : (
                       <div style={{ 
@@ -402,7 +327,7 @@ export default function Home() {
                         alignItems: 'center', 
                         justifyContent: 'center',
                         height: '100%',
-                        fontSize: '4rem',
+                        fontSize: '3rem',
                         background: '#FFF0F5'
                       }}>
                         🎁
@@ -411,26 +336,29 @@ export default function Home() {
                     
                     <div style={{
                       position: 'absolute',
-                      bottom: '15px',
-                      right: '15px',
+                      bottom: '8px',
+                      right: '8px',
                       background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
                       color: 'white',
-                      padding: '8px 18px',
-                      borderRadius: '25px',
-                      fontSize: '1rem',
+                      padding: '4px 12px',
+                      borderRadius: '20px',
+                      fontSize: '0.75rem',
                       fontWeight: '700',
-                      boxShadow: '0 5px 20px rgba(255, 20, 147, 0.3)'
+                      boxShadow: '0 4px 15px rgba(255, 20, 147, 0.3)'
                     }}>
                       ETB {p.price.toLocaleString()}
                     </div>
                   </div>
 
-                  <div style={{ padding: '18px 20px 20px' }}>
+                  <div style={{ padding: '12px 14px 14px' }}>
                     <h3 style={{ 
                       margin: 0, 
-                      fontSize: '1.1rem', 
+                      fontSize: '0.9rem', 
                       color: '#333',
-                      fontWeight: '600'
+                      fontWeight: '600',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
                     }}>
                       {p.name}
                     </h3>
@@ -438,24 +366,24 @@ export default function Home() {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      marginTop: '10px'
+                      marginTop: '6px'
                     }}>
                       <span style={{
                         background: '#FFF0F5',
-                        padding: '3px 14px',
-                        borderRadius: '15px',
-                        fontSize: '0.75rem',
+                        padding: '2px 10px',
+                        borderRadius: '12px',
+                        fontSize: '0.6rem',
                         color: '#FF1493',
                         fontWeight: '500'
                       }}>
                         {p.category || 'Gifts'}
                       </span>
                       <span style={{
-                        fontSize: '0.8rem',
+                        fontSize: '0.65rem',
                         color: '#FF69B4',
                         fontWeight: '500'
                       }}>
-                        View Details →
+                        View →
                       </span>
                     </div>
                   </div>
@@ -466,21 +394,21 @@ export default function Home() {
         )}
       </div>
 
-      {/* Footer */}
+      {/* Footer - Mobile Optimized */}
       <motion.footer
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         style={{
           textAlign: 'center',
-          padding: '35px',
+          padding: '25px',
           background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
           color: 'white',
-          marginTop: '20px'
+          marginTop: '10px'
         }}
       >
-        <p style={{ fontSize: '1.1rem', marginBottom: '5px' }}>🎁 Famous Gifts Hawassa</p>
-        <p style={{ opacity: 0.7, fontSize: '0.9rem' }}>© 2026 All rights reserved</p>
-        <p style={{ opacity: 0.6, fontSize: '0.85rem' }}>Call us: +251 90 949 5969</p>
+        <p style={{ fontSize: '1rem', marginBottom: '3px' }}>🎁 Famous Gifts Hawassa</p>
+        <p style={{ opacity: 0.7, fontSize: '0.75rem' }}>© 2026 All rights reserved</p>
+        <p style={{ opacity: 0.6, fontSize: '0.7rem' }}>Call us: +251 90 949 5969</p>
       </motion.footer>
     </div>
   );
