@@ -1,8 +1,6 @@
 import multer from 'multer';
-import { v4 as uuidv4 } from 'uuid';
-import path from 'path';
-import fs from 'fs';
 import cloudinary from 'cloudinary';
+import { v4 as uuidv4 } from 'uuid';
 
 // Configure Cloudinary with YOUR credentials
 cloudinary.v2.config({
@@ -11,22 +9,10 @@ cloudinary.v2.config({
   api_secret: 'M784F1bhImTa8bfp13kTl1KpTC0',
 });
 
-// Configure multer for temporary storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = './public/uploads';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueName = uuidv4() + path.extname(file.originalname);
-    cb(null, uniqueName);
-  }
-});
+// Use memory storage (no filesystem writing)
+const storage = multer.memoryStorage();
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
 });
@@ -53,17 +39,14 @@ export default function handler(req, res) {
     }
 
     try {
-      const filePath = req.file.path;
-
-      console.log('Uploading to Cloudinary:', filePath);
-
-      // Upload to Cloudinary
+      // Upload directly from memory buffer to Cloudinary
       const result = await new Promise((resolve, reject) => {
-        cloudinary.v2.uploader.upload(
-          filePath,
+        const uploadStream = cloudinary.v2.uploader.upload_stream(
           {
             folder: 'famous-gifts',
             resource_type: 'auto',
+            use_filename: true,
+            unique_filename: true,
           },
           (error, uploadResult) => {
             if (error) {
@@ -74,14 +57,10 @@ export default function handler(req, res) {
             }
           }
         );
-      });
 
-      // Clean up local file
-      try {
-        fs.unlinkSync(filePath);
-      } catch (cleanupErr) {
-        console.warn('Cleanup warning:', cleanupErr.message);
-      }
+        // Write the buffer to the upload stream
+        uploadStream.end(req.file.buffer);
+      });
 
       return res.status(200).json({
         url: result.secure_url,
