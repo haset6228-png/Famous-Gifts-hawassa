@@ -119,7 +119,13 @@ export default function ProductDetail() {
     );
   }
 
-  const images = product.images && product.images.length > 0 ? product.images : (product.thumbnail ? [product.thumbnail] : []);
+  // Ensure images is always an array, even if product.images is null or an object
+  const rawImages = product.images || [];
+  const images = Array.isArray(rawImages) ? rawImages : Object.values(rawImages);
+  
+  // Fallback if no images exist
+  const imagesToDisplay = images.length > 0 ? images : (product.thumbnail ? [product.thumbnail] : []);
+  
   const hasVideo = product.video && product.video.length > 0;
 
   return (
@@ -201,7 +207,7 @@ export default function ProductDetail() {
           background: '#fafafa',
           padding: '16px',
         }}>
-          {hasVideo && images.length > 0 && (
+          {hasVideo && imagesToDisplay.length > 0 && (
             <div style={{
               display: 'flex',
               gap: '8px',
@@ -226,7 +232,7 @@ export default function ProductDetail() {
                   transition: 'all 0.3s'
                 }}
               >
-                📸 Photos ({images.length})
+                📸 Photos ({imagesToDisplay.length})
               </button>
               <button
                 onClick={() => setActiveTab('video')}
@@ -251,9 +257,9 @@ export default function ProductDetail() {
           {activeTab === 'photos' && (
             <>
               <div style={{ width: '100%', marginBottom: '12px' }}>
-                {images.length > 0 ? (
+                {imagesToDisplay.length > 0 ? (
                   <img
-                    src={images[selectedImage]}
+                    src={imagesToDisplay[selectedImage]}
                     alt={product.name}
                     style={{
                       width: '100%',
@@ -279,7 +285,8 @@ export default function ProductDetail() {
                 )}
               </div>
 
-              {images.length > 1 && (
+              {/* FIX: Corrected .map variables here */}
+              {imagesToDisplay.length > 1 && (
                 <div style={{
                   display: 'flex',
                   gap: '8px',
@@ -288,7 +295,7 @@ export default function ProductDetail() {
                   padding: '4px 0',
                   WebkitOverflowScrolling: 'touch'
                 }}>
-                  {images.map((img, index) => (
+                  {imagesToDisplay.map((img, index) => (
                     <div
                       key={index}
                       onClick={() => setSelectedImage(index)}
