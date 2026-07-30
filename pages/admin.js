@@ -47,23 +47,36 @@ export default function Admin() {
 
   const handleFileUpload = async (file, type) => {
   setUploading(true);
-  const formData = new FormData();
-  formData.append('file', file);
-
+  
   try {
+    // Convert to base64
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
     const response = await fetch('/api/upload-cloudinary', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ image: base64 }),
     });
+
     const data = await response.json();
-    if (data.url) {
+
+    if (response.ok && data.url) {
       if (type === 'thumbnail') {
-        setProductForm({ ...productForm, thumbnail: data.url });
+        setProductForm(prev => ({ ...prev, thumbnail: data.url }));
       } else if (type === 'image') {
-        setProductForm({ ...productForm, images: [...productForm.images, data.url] });
+        setProductForm(prev => ({ ...prev, images: [...prev.images, data.url] }));
       } else if (type === 'video') {
-        setProductForm({ ...productForm, video: data.url });
+        setProductForm(prev => ({ ...prev, video: data.url }));
       }
+    } else {
+      alert('Upload failed: ' + (data.error || 'Unknown error'));
     }
   } catch (error) {
     alert('Upload failed: ' + error.message);

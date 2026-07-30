@@ -1,5 +1,4 @@
 import cloudinary from 'cloudinary';
-import { v4 as uuidv4 } from 'uuid';
 
 // Configure Cloudinary
 cloudinary.v2.config({
@@ -22,35 +21,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { file, type } = req.body;
+    const { image } = req.body;
     
-    if (!file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+    if (!image) {
+      return res.status(400).json({ error: 'No image provided' });
     }
 
-    console.log('Uploading to Cloudinary...');
-
     // Upload to Cloudinary
-    const result = await new Promise((resolve, reject) => {
-      cloudinary.v2.uploader.upload(
-        file,
-        {
-          folder: 'famous-gifts',
-          resource_type: 'auto',
-          public_id: uuidv4(),
-        },
-        (error, uploadResult) => {
-          if (error) {
-            console.error('Cloudinary error:', error);
-            reject(error);
-          } else {
-            resolve(uploadResult);
-          }
-        }
-      );
+    const result = await cloudinary.v2.uploader.upload(image, {
+      folder: 'famous-gifts',
+      resource_type: 'auto',
     });
-
-    console.log('Upload successful:', result.secure_url);
 
     return res.status(200).json({
       url: result.secure_url,
