@@ -15,22 +15,27 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (id) {
-      import { supabase } from '../../lib/supabase';
-
-// Then:
-const { data, error } = await supabase
-  .from('products')
-  .select('*')
-  .eq('id', id)
-  .single();
-
-if (!error && data) {
-  setProduct(data);
-}
-      setProduct(found || null);
-      setLoading(false);
+      loadProduct();
     }
   }, [id]);
+
+  const loadProduct = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (!error && data) {
+        setProduct(data);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading product:', error);
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,6 +44,7 @@ if (!error && data) {
     if (!product) return;
     
     const order = {
+      id: Date.now().toString(),
       name: form.name,
       phone: form.phone,
       address: form.address,
@@ -123,7 +129,7 @@ if (!error && data) {
       fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
       padding: '12px'
     }}>
-      {/* Navigation - Mobile Optimized */}
+      {/* Navigation */}
       <nav style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -180,7 +186,7 @@ if (!error && data) {
         </div>
       </nav>
 
-      {/* Product Detail - Mobile Optimized */}
+      {/* Product Detail */}
       <div style={{
         maxWidth: '100%',
         margin: '0 auto',
@@ -190,12 +196,11 @@ if (!error && data) {
         boxShadow: '0 5px 30px rgba(0,0,0,0.06)',
         border: '1px solid rgba(255, 105, 180, 0.1)'
       }}>
-        {/* Image/Video Gallery - Mobile Optimized */}
+        {/* Image/Video Gallery */}
         <div style={{
           background: '#fafafa',
           padding: '16px',
         }}>
-          {/* Tab Switcher */}
           {hasVideo && images.length > 0 && (
             <div style={{
               display: 'flex',
@@ -243,7 +248,6 @@ if (!error && data) {
             </div>
           )}
 
-          {/* Photos Tab */}
           {activeTab === 'photos' && (
             <>
               <div style={{ width: '100%', marginBottom: '12px' }}>
@@ -315,7 +319,6 @@ if (!error && data) {
             </>
           )}
 
-          {/* Video Tab */}
           {activeTab === 'video' && hasVideo && (
             <div style={{ width: '100%' }}>
               <video
@@ -335,7 +338,7 @@ if (!error && data) {
           )}
         </div>
 
-        {/* Product Info - Mobile Optimized */}
+        {/* Product Info */}
         <div style={{
           padding: '20px 18px'
         }}>
@@ -390,7 +393,6 @@ if (!error && data) {
             </p>
           </div>
 
-          {/* Order Form - Mobile Optimized */}
           <form onSubmit={handleSubmit}>
             <div style={{ display: 'grid', gap: '10px' }}>
               <input
@@ -522,7 +524,6 @@ if (!error && data) {
         </div>
       </div>
 
-      {/* Footer */}
       <footer style={{
         textAlign: 'center',
         padding: '20px',

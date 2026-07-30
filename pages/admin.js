@@ -136,7 +136,6 @@ export default function Admin() {
 
     try {
       if (editingId) {
-        // Update existing product
         const { error } = await supabase
           .from('products')
           .update(newProduct)
@@ -145,7 +144,6 @@ export default function Admin() {
         if (error) throw error;
         alert('Product updated successfully!');
       } else {
-        // Insert new product
         const { error } = await supabase
           .from('products')
           .insert([newProduct]);
