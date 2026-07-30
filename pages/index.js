@@ -31,11 +31,28 @@ export default function Home() {
     },
   ];
 
-  useEffect(() => {
-    setIsClient(true);
-    const savedProducts = JSON.parse(localStorage.getItem('products') || '[]');
-    setProducts(savedProducts);
-  }, []);
+  import { supabase } from '../lib/supabase';
+
+// Then in the component:
+useEffect(() => {
+  setIsClient(true);
+  loadProducts();
+}, []);
+
+const loadProducts = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('createdAt', { ascending: false });
+    
+    if (!error && data) {
+      setProducts(data);
+    }
+  } catch (error) {
+    console.error('Error loading products:', error);
+  }
+};
 
   useEffect(() => {
     if (isClient) {

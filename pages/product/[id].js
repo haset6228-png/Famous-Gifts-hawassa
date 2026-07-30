@@ -14,8 +14,18 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (id) {
-      const products = JSON.parse(localStorage.getItem('products') || '[]');
-      const found = products.find(p => p.id === id);
+      import { supabase } from '../../lib/supabase';
+
+// Then:
+const { data, error } = await supabase
+  .from('products')
+  .select('*')
+  .eq('id', id)
+  .single();
+
+if (!error && data) {
+  setProduct(data);
+}
       setProduct(found || null);
       setLoading(false);
     }
