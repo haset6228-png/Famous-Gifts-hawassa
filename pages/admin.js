@@ -45,45 +45,47 @@ export default function Admin() {
     }
   };
 
+  // ========== DIRECT CLOUDINARY UPLOAD (WORKS ON VERCEL) ==========
   const handleFileUpload = async (file, type) => {
-  setUploading(true);
-  
-  try {
-    // Convert to base64
-    const base64 = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
+    setUploading(true);
+    
+    try {
+      // Create form data for Cloudinary
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'famous_gifts'); // You need to create this in Cloudinary
+      formData.append('folder', 'famous-gifts');
 
-    const response = await fetch('/api/upload-cloudinary', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ image: base64 }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok && data.url) {
-      if (type === 'thumbnail') {
-        setProductForm(prev => ({ ...prev, thumbnail: data.url }));
-      } else if (type === 'image') {
-        setProductForm(prev => ({ ...prev, images: [...prev.images, data.url] }));
-      } else if (type === 'video') {
-        setProductForm(prev => ({ ...prev, video: data.url }));
+      // Upload directly to Cloudinary from browser
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/k94lgst7/auto/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+      
+      const data = await response.json();
+      
+      if (data.secure_url) {
+        const url = data.secure_url;
+        if (type === 'thumbnail') {
+          setProductForm(prev => ({ ...prev, thumbnail: url }));
+        } else if (type === 'image') {
+          setProductForm(prev => ({ ...prev, images: [...prev.images, url] }));
+        } else if (type === 'video') {
+          setProductForm(prev => ({ ...prev, video: url }));
+        }
+        alert('Upload successful! ✅');
+      } else {
+        alert('Upload failed: ' + (data.error?.message || 'Unknown error'));
       }
-    } else {
-      alert('Upload failed: ' + (data.error || 'Unknown error'));
+    } catch (error) {
+      alert('Upload failed: ' + error.message);
+    } finally {
+      setUploading(false);
     }
-  } catch (error) {
-    alert('Upload failed: ' + error.message);
-  } finally {
-    setUploading(false);
-  }
-};
+  };
 
   const removeImage = (index) => {
     const newImages = productForm.images.filter((_, i) => i !== index);
@@ -368,10 +370,11 @@ export default function Admin() {
                       boxSizing: 'border-box'
                     }}
                   />
+                  {uploading && <p style={{ color: '#FF1493', fontSize: '0.9rem' }}>⏳ Uploading...</p>}
                   {productForm.thumbnail && (
                     <div style={{ marginTop: '10px' }}>
-                      <img src={productForm.thumbnail} alt="Thumbnail" style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '10px' }} />
-                      <button onClick={() => setProductForm({...productForm, thumbnail: ''})} style={{ marginLeft: '10px', background: 'red', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }}>Remove</button>
+                      <img src={productForm.thumbnail} alt="Thumbnail" style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '10px', border: '2px solid #FF69B4' }} />
+                      <button onClick={() => setProductForm({...productForm, thumbnail: ''})} style={{ marginLeft: '10px', background: '#ff4444', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }}>Remove</button>
                     </div>
                   )}
                 </div>
@@ -394,7 +397,7 @@ export default function Admin() {
                   {productForm.video && (
                     <div style={{ marginTop: '10px' }}>
                       <video src={productForm.video} style={{ maxWidth: '100px', maxHeight: '100px', borderRadius: '10px' }} controls />
-                      <button onClick={() => setProductForm({...productForm, video: ''})} style={{ marginLeft: '10px', background: 'red', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }}>Remove</button>
+                      <button onClick={() => setProductForm({...productForm, video: ''})} style={{ marginLeft: '10px', background: '#ff4444', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }}>Remove</button>
                     </div>
                   )}
                 </div>
@@ -423,21 +426,20 @@ export default function Admin() {
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
                       {productForm.images.map((img, index) => (
                         <div key={index} style={{ position: 'relative' }}>
-                          <img src={img} alt={`Gallery ${index}`} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '10px' }} />
-                          <button onClick={() => removeImage(index)} style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+                          <img src={img} alt={`Gallery ${index}`} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '10px', border: '2px solid #FF69B4' }} />
+                          <button onClick={() => removeImage(index)} style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#ff4444', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
               </div>
-              {uploading && <p style={{ color: '#FF1493' }}>⏳ Uploading files...</p>}
               <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
                 <button
                   type="submit"
                   disabled={uploading}
                   style={{
-                    background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
+                    background: uploading ? '#ccc' : 'linear-gradient(135deg, #FF1493, #FF69B4)',
                     color: 'white',
                     padding: '12px 40px',
                     border: 'none',
@@ -447,7 +449,7 @@ export default function Admin() {
                     fontSize: '1rem'
                   }}
                 >
-                  {editingId ? 'Update Product' : 'Add Product'}
+                  {uploading ? '⏳ Uploading...' : (editingId ? 'Update Product' : 'Add Product')}
                 </button>
                 {editingId && (
                   <button
