@@ -132,39 +132,43 @@ export default function Home() {
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* 🎵 TikTok Icon */}
-          <motion.a 
-            href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.15, rotate: -5 }}
-            whileTap={{ scale: 0.9 }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '36px',
-              height: '36px',
-              borderRadius: '50%',
-              background: 'rgba(0, 0, 0, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              fontSize: '1.2rem',
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              backdropFilter: 'blur(5px)',
-              color: '#FF1493'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(255, 20, 147, 0.15)';
-              e.target.style.borderColor = '#FF1493';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(0, 0, 0, 0.05)';
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            }}
-          >
-            🎵
-          </motion.a>
+          {/* 🎵 TikTok Icon - Real PNG from CDN */}
+<motion.a 
+  href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  whileHover={{ scale: 1.15, rotate: -5 }}
+  whileTap={{ scale: 0.9 }}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    background: 'rgba(0, 0, 0, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    textDecoration: 'none',
+    transition: 'all 0.3s ease',
+    backdropFilter: 'blur(5px)',
+    overflow: 'hidden',
+    padding: '4px'
+  }}
+  onMouseEnter={(e) => {
+    e.target.style.background = 'rgba(255, 20, 147, 0.15)';
+    e.target.style.borderColor = '#FF1493';
+  }}
+  onMouseLeave={(e) => {
+    e.target.style.background = 'rgba(0, 0, 0, 0.05)';
+    e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+  }}
+>
+  <img 
+    src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" 
+    alt="TikTok" 
+    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+  />
+</motion.a>
           
           {/* 📞 Call Button */}
           <motion.a 
@@ -571,30 +575,34 @@ export default function Home() {
       >
         <p style={{ fontSize: '1rem', marginBottom: '3px', color: '#FF1493' }}>🎁 Famous Gifts Hawassa</p>
         
-        {/* TikTok Icon in Footer */}
-        <motion.a
-          href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT"
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.2, rotate: -5 }}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '45px',
-            height: '45px',
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.15)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            fontSize: '1.6rem',
-            textDecoration: 'none',
-            color: '#FF1493',
-            transition: 'all 0.3s ease',
-            margin: '8px 0'
-          }}
-        >
-          🎵
-        </motion.a>
+        {/* TikTok Icon in Footer - Real PNG */}
+<motion.a
+  href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT"
+  target="_blank"
+  rel="noopener noreferrer"
+  whileHover={{ scale: 1.2, rotate: -5 }}
+  style={{
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '45px',
+    height: '45px',
+    borderRadius: '50%',
+    background: 'rgba(255, 255, 255, 0.15)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    textDecoration: 'none',
+    transition: 'all 0.3s ease',
+    margin: '8px 0',
+    overflow: 'hidden',
+    padding: '6px'
+  }}
+>
+  <img 
+    src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" 
+    alt="TikTok" 
+    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+  />
+</motion.a>
         
         <p style={{ opacity: 0.7, fontSize: '0.75rem', color: '#FF1493' }}>© 2026 All rights reserved</p>
         <p style={{ opacity: 0.6, fontSize: '0.7rem', color: '#FF1493' }}>Call us: +251 90 949 5969</p>
