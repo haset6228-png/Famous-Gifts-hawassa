@@ -39,7 +39,7 @@ export default function ProductDetail() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
@@ -58,16 +58,27 @@ export default function ProductDetail() {
       createdAt: new Date().toISOString()
     };
     
-    const existing = JSON.parse(localStorage.getItem('orders') || '[]');
-    existing.push(order);
-    localStorage.setItem('orders', JSON.stringify(existing));
-    
-    setTimeout(() => {
-      alert('Order placed! We will call ' + form.phone + ' within 24 hours. Thank you for shopping with Famous Gifts Hawassa!');
+    try {
+      // Save to Supabase (cloud)
+      const { error } = await supabase
+        .from('orders')
+        .insert([order]);
+      
+      if (error) throw error;
+      
+      // Also save to localStorage as backup
+      const existing = JSON.parse(localStorage.getItem('orders') || '[]');
+      existing.push(order);
+      localStorage.setItem('orders', JSON.stringify(existing));
+      
+      alert('✅ Order placed! We will call ' + form.phone + ' within 24 hours. Thank you for shopping with Famous Gifts Hawassa!');
       setIsSubmitting(false);
       setForm({ name: '', phone: '', address: '', quantity: 1 });
       router.push('/');
-    }, 1000);
+    } catch (error) {
+      alert('Error placing order: ' + error.message);
+      setIsSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -124,14 +135,10 @@ export default function ProductDetail() {
   // FIX: Properly handle images array
   let images = [];
   if (product.images) {
-    // If it's already an array
     if (Array.isArray(product.images)) {
       images = product.images;
-    } 
-    // If it's a string that looks like an array
-    else if (typeof product.images === 'string') {
+    } else if (typeof product.images === 'string') {
       try {
-        // Try to parse as JSON
         const parsed = JSON.parse(product.images);
         if (Array.isArray(parsed)) {
           images = parsed;
@@ -139,7 +146,6 @@ export default function ProductDetail() {
           images = [parsed];
         }
       } catch (e) {
-        // If it's a single URL string
         if (product.images.startsWith('http')) {
           images = [product.images];
         }
@@ -147,12 +153,9 @@ export default function ProductDetail() {
     }
   }
 
-  // If no images, use thumbnail as fallback
   if (images.length === 0 && product.thumbnail) {
     images = [product.thumbnail];
   }
-
-  console.log('Final images array:', images);
 
   const hasVideo = product.video && product.video.length > 0;
 
@@ -163,7 +166,6 @@ export default function ProductDetail() {
       fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
       padding: '12px'
     }}>
-      {/* Navigation */}
       <nav style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -220,7 +222,6 @@ export default function ProductDetail() {
         </div>
       </nav>
 
-      {/* Product Detail */}
       <div style={{
         maxWidth: '100%',
         margin: '0 auto',
@@ -230,12 +231,10 @@ export default function ProductDetail() {
         boxShadow: '0 5px 30px rgba(0,0,0,0.06)',
         border: '1px solid rgba(255, 105, 180, 0.1)'
       }}>
-        {/* Image/Video Gallery */}
         <div style={{
           background: '#fafafa',
           padding: '16px',
         }}>
-          {/* Tab Switcher */}
           {hasVideo && images.length > 0 && (
             <div style={{
               display: 'flex',
@@ -283,7 +282,6 @@ export default function ProductDetail() {
             </div>
           )}
 
-          {/* Photos Tab */}
           {activeTab === 'photos' && (
             <>
               <div style={{ width: '100%', marginBottom: '12px' }}>
@@ -363,7 +361,6 @@ export default function ProductDetail() {
             </>
           )}
 
-          {/* Video Tab */}
           {activeTab === 'video' && hasVideo && (
             <div style={{ width: '100%' }}>
               <video
@@ -383,7 +380,6 @@ export default function ProductDetail() {
           )}
         </div>
 
-        {/* Product Info */}
         <div style={{
           padding: '20px 18px'
         }}>
