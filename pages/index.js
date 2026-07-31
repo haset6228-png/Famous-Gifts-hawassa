@@ -14,21 +14,21 @@ export default function Home() {
     {
       id: 1,
       image: '/images/slide1.jpg',
-      title: '🎁 Beautiful Gifts',
+      title: '🎁 ውብ የሆኑ',
       subtitle: 'Handcrafted with love for every occasion',
       cta: 'Shop Now →'
     },
     {
       id: 2,
       image: '/images/slide2.jpg',
-      title: '💐 Premium Quality',
+      title: '💐 በጥራት የተሰሩ',
       subtitle: 'Discover our amazing collection',
       cta: 'View Collection →'
     },
     {
       id: 3,
       image: '/images/slide3.jpg',
-      title: '🎀 Unique Designs',
+      title: '🎀 ለሚወዱት የሚሰጡት',
       subtitle: 'Beautiful gifts for your loved ones',
       cta: 'Explore Now →'
     },
