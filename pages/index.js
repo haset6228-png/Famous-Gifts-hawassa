@@ -258,7 +258,7 @@ export default function Home() {
       fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
     }}>
       
-      {/* Navigation Bar - Glassmorphism with TikTok Icon */}
+      {/* Navigation Bar with TikTok & Telegram Icons */}
       <motion.nav 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -280,22 +280,61 @@ export default function Home() {
           margin: '8px 12px'
         }}
       >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '1.5rem' }}>🎁</span>
+          <div>
+            <h1 style={{ color: '#FF1493', margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>Famous Gifts</h1>
+            <p style={{ color: '#FF69B4', margin: 0, fontSize: '0.55rem', letterSpacing: '1px' }}>HAWASSA</p>
+          </div>
+        </div>
+        
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-  {/* Logo */}
-  <img 
-    src="/logo.png" 
-    alt="Famous Gifts Logo" 
-    style={{ 
-      height: '40px',
-      width: 'auto',
-      objectFit: 'contain'
-    }}
-  />
-  <div>
-    <h1 style={{ color: '#FF1493', margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>Famous Gifts</h1>
-    <p style={{ color: '#FF69B4', margin: 0, fontSize: '0.55rem', letterSpacing: '1px' }}>HAWASSA</p>
-  </div>
-</div>
+          {/* ✈️ Telegram Icon */}
+          <motion.a 
+            href="https://t.me/Famous_gift" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, rotate: -5 }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              backdropFilter: 'blur(5px)',
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(0, 136, 204, 0.2)';
+              e.target.style.borderColor = '#0088cc';
+              e.target.style.boxShadow = '0 4px 20px rgba(0, 136, 204, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+              e.target.style.boxShadow = 'none';
+            }}
+          >
+            <svg 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ display: 'block' }}
+            >
+              <path 
+                d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" 
+                fill="#0088cc"
+              />
+            </svg>
+          </motion.a>
+        
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* 🎵 TikTok Icon - Real PNG from CDN */}
