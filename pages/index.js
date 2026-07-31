@@ -82,17 +82,174 @@ export default function Home() {
   };
 
   if (!isClient) {
-    return (
-      <div style={{ 
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 50%, #FFD6E5 100%)',
-        fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-        padding: '20px'
+  return (
+    <div style={{ 
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 50%, #FFD6E5 100%)',
+      fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+      padding: '12px'
+    }}>
+      
+      {/* Skeleton Navigation */}
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.65)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '16px',
+        padding: '12px 16px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '12px',
+        border: '1px solid rgba(255, 255, 255, 0.3)'
       }}>
-        <h1 style={{ textAlign: 'center', color: '#FF1493' }}>Loading...</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Skeleton icon */}
+          <div style={{ 
+            width: '36px', 
+            height: '36px', 
+            background: '#e8e8e8', 
+            borderRadius: '50%',
+            animation: 'pulse 1.5s ease-in-out infinite'
+          }} />
+          <div>
+            {/* Skeleton title */}
+            <div style={{ 
+              width: '120px', 
+              height: '16px', 
+              background: '#e8e8e8', 
+              borderRadius: '4px',
+              marginBottom: '4px',
+              animation: 'pulse 1.5s ease-in-out infinite'
+            }} />
+            {/* Skeleton subtitle */}
+            <div style={{ 
+              width: '60px', 
+              height: '10px', 
+              background: '#e8e8e8', 
+              borderRadius: '4px',
+              animation: 'pulse 1.5s ease-in-out infinite',
+              animationDelay: '0.2s'
+            }} />
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          {/* Skeleton TikTok icon */}
+          <div style={{ 
+            width: '36px', 
+            height: '36px', 
+            background: '#e8e8e8', 
+            borderRadius: '50%',
+            animation: 'pulse 1.5s ease-in-out infinite',
+            animationDelay: '0.3s'
+          }} />
+          {/* Skeleton Call button */}
+          <div style={{ 
+            width: '80px', 
+            height: '36px', 
+            background: '#e8e8e8', 
+            borderRadius: '50px',
+            animation: 'pulse 1.5s ease-in-out infinite',
+            animationDelay: '0.4s'
+          }} />
+        </div>
       </div>
-    );
-  }
+
+      {/* Skeleton Promo Banner */}
+      <div style={{
+        height: '36px',
+        background: '#e8e8e8',
+        borderRadius: '12px',
+        marginBottom: '12px',
+        animation: 'pulse 1.5s ease-in-out infinite',
+        animationDelay: '0.1s'
+      }} />
+
+      {/* Skeleton Hero Carousel */}
+      <div style={{
+        height: '250px',
+        background: 'linear-gradient(135deg, #e8e8e8, #f0f0f0)',
+        borderRadius: '16px',
+        marginBottom: '20px',
+        animation: 'pulse 1.5s ease-in-out infinite',
+        animationDelay: '0.2s'
+      }} />
+
+      {/* Skeleton Search Bar */}
+      <div style={{
+        maxWidth: '500px',
+        margin: '0 auto 20px',
+        padding: '0 10px'
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          background: 'rgba(255, 255, 255, 0.6)',
+          borderRadius: '50px',
+          padding: '4px 8px 4px 20px',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          height: '48px',
+          animation: 'pulse 1.5s ease-in-out infinite',
+          animationDelay: '0.3s'
+        }}>
+          <div style={{ flex: 1, height: '20px', background: '#e8e8e8', borderRadius: '4px' }} />
+          <div style={{ width: '60px', height: '30px', background: '#e8e8e8', borderRadius: '50px' }} />
+        </div>
+      </div>
+
+      {/* Skeleton Products Grid */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fill, minmax(155px, 1fr))', 
+        gap: '14px',
+        padding: '0 12px'
+      }}>
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+          <div key={i} style={{
+            background: 'white',
+            borderRadius: '14px',
+            overflow: 'hidden',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.04)',
+            animation: 'pulse 1.5s ease-in-out infinite',
+            animationDelay: `${i * 0.08}s`
+          }}>
+            {/* Skeleton Image */}
+            <div style={{
+              height: '160px',
+              background: '#e8e8e8'
+            }} />
+            {/* Skeleton Text */}
+            <div style={{ padding: '12px 14px 14px' }}>
+              <div style={{
+                height: '14px',
+                background: '#e8e8e8',
+                borderRadius: '4px',
+                marginBottom: '8px'
+              }} />
+              <div style={{
+                height: '10px',
+                background: '#e8e8e8',
+                borderRadius: '4px',
+                width: '60%'
+              }} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pulse Animation */}
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% { 
+            opacity: 1;
+          }
+          50% { 
+            opacity: 0.5;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
 
   return (
     <div style={{ 

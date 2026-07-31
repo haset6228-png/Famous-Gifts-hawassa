@@ -82,21 +82,155 @@ export default function ProductDetail() {
   };
 
   if (loading) {
-    return (
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 50%, #FFD6E5 100%)',
+      fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+      padding: '12px'
+    }}>
+      {/* Skeleton Navigation */}
       <div style={{
-        minHeight: '100vh',
         display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        justifyContent: 'center',
-        background: 'linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 50%, #FFD6E5 100%)'
+        padding: '10px 16px',
+        background: 'rgba(255,255,255,0.95)',
+        borderRadius: '12px',
+        marginBottom: '16px',
+        border: '1px solid rgba(255, 105, 180, 0.1)',
+        animation: 'pulse 1.5s ease-in-out infinite'
       }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '20px' }}>🎁</div>
-          <p style={{ color: '#FF1493', fontSize: '1.2rem' }}>Loading product...</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '36px', height: '36px', background: '#e8e8e8', borderRadius: '50%' }} />
+          <div>
+            <div style={{ width: '100px', height: '14px', background: '#e8e8e8', borderRadius: '4px', marginBottom: '4px' }} />
+            <div style={{ width: '50px', height: '8px', background: '#e8e8e8', borderRadius: '4px' }} />
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ width: '60px', height: '32px', background: '#e8e8e8', borderRadius: '20px' }} />
+          <div style={{ width: '60px', height: '32px', background: '#e8e8e8', borderRadius: '20px' }} />
         </div>
       </div>
-    );
-  }
+
+      {/* Skeleton Product Detail */}
+      <div style={{
+        maxWidth: '100%',
+        margin: '0 auto',
+        background: 'white',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        border: '1px solid rgba(255, 105, 180, 0.1)'
+      }}>
+        <div style={{
+          background: '#fafafa',
+          padding: '16px',
+          animation: 'pulse 1.5s ease-in-out infinite',
+          animationDelay: '0.2s'
+        }}>
+          {/* Skeleton Image */}
+          <div style={{
+            width: '100%',
+            height: '250px',
+            background: '#e8e8e8',
+            borderRadius: '12px'
+          }} />
+        </div>
+
+        {/* Skeleton Product Info */}
+        <div style={{ padding: '20px 18px' }}>
+          {/* Skeleton Category */}
+          <div style={{
+            width: '80px',
+            height: '20px',
+            background: '#e8e8e8',
+            borderRadius: '16px',
+            marginBottom: '10px',
+            animation: 'pulse 1.5s ease-in-out infinite',
+            animationDelay: '0.3s'
+          }} />
+          
+          {/* Skeleton Title */}
+          <div style={{
+            width: '70%',
+            height: '28px',
+            background: '#e8e8e8',
+            borderRadius: '4px',
+            marginBottom: '8px',
+            animation: 'pulse 1.5s ease-in-out infinite',
+            animationDelay: '0.4s'
+          }} />
+          
+          {/* Skeleton Price */}
+          <div style={{
+            width: '40%',
+            height: '32px',
+            background: '#e8e8e8',
+            borderRadius: '4px',
+            marginBottom: '15px',
+            animation: 'pulse 1.5s ease-in-out infinite',
+            animationDelay: '0.5s'
+          }} />
+          
+          {/* Skeleton Description */}
+          <div style={{
+            width: '100%',
+            height: '80px',
+            background: '#e8e8e8',
+            borderRadius: '12px',
+            marginBottom: '18px',
+            animation: 'pulse 1.5s ease-in-out infinite',
+            animationDelay: '0.6s'
+          }} />
+          
+          {/* Skeleton Form */}
+          <div style={{ display: 'grid', gap: '10px' }}>
+            <div style={{
+              width: '100%',
+              height: '48px',
+              background: '#e8e8e8',
+              borderRadius: '12px',
+              animation: 'pulse 1.5s ease-in-out infinite',
+              animationDelay: '0.7s'
+            }} />
+            <div style={{
+              width: '100%',
+              height: '48px',
+              background: '#e8e8e8',
+              borderRadius: '12px',
+              animation: 'pulse 1.5s ease-in-out infinite',
+              animationDelay: '0.8s'
+            }} />
+            <div style={{
+              width: '100%',
+              height: '48px',
+              background: '#e8e8e8',
+              borderRadius: '12px',
+              animation: 'pulse 1.5s ease-in-out infinite',
+              animationDelay: '0.9s'
+            }} />
+            <div style={{
+              width: '100%',
+              height: '56px',
+              background: '#e8e8e8',
+              borderRadius: '14px',
+              animation: 'pulse 1.5s ease-in-out infinite',
+              animationDelay: '1s'
+            }} />
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
+    </div>
+  );
+}
 
   if (!product) {
     return (
