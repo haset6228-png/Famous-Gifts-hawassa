@@ -6,6 +6,8 @@ import { supabase } from '../lib/supabase';
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
@@ -46,11 +48,26 @@ export default function Home() {
       
       if (!error && data) {
         setProducts(data);
+        setFilteredProducts(data);
       }
     } catch (error) {
       console.error('Error loading products:', error);
     }
   };
+
+  // Filter products when search changes
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredProducts(products);
+    } else {
+      const filtered = products.filter(p => 
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (p.category && p.category.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [searchTerm, products]);
 
   useEffect(() => {
     if (isClient) {
@@ -251,7 +268,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Products Section */}
+      {/* Products Section with Search Bar */}
       <div id="products" style={{ padding: '10px 12px 40px' }}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <h2 style={{ 
@@ -267,7 +284,73 @@ export default function Home() {
           </p>
         </div>
 
-        {products.length === 0 ? (
+        {/* 🔍 SEARCH BAR */}
+        <div style={{ 
+          maxWidth: '500px', 
+          margin: '0 auto 20px',
+          padding: '0 10px'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            background: 'white',
+            borderRadius: '50px',
+            padding: '4px 8px 4px 20px',
+            boxShadow: '0 2px 15px rgba(0,0,0,0.06)',
+            border: '2px solid #FFB6C1',
+            transition: 'all 0.3s'
+          }}>
+            <input
+              type="text"
+              placeholder="🔍 Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                flex: 1,
+                border: 'none',
+                padding: '12px 8px',
+                fontSize: '0.9rem',
+                outline: 'none',
+                background: 'transparent',
+                color: '#333'
+              }}
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#999',
+                  cursor: 'pointer',
+                  padding: '8px',
+                  fontSize: '1.1rem'
+                }}
+              >
+                ✕
+              </button>
+            )}
+            <span style={{
+              background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
+              color: 'white',
+              padding: '8px 18px',
+              borderRadius: '50px',
+              fontSize: '0.8rem',
+              fontWeight: '600'
+            }}>
+              {filteredProducts.length}
+            </span>
+          </div>
+        </div>
+
+        {/* Show search results count */}
+        {searchTerm && (
+          <p style={{ textAlign: 'center', fontSize: '0.8rem', color: '#888', marginBottom: '15px' }}>
+            Found {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
+          </p>
+        )}
+
+        {filteredProducts.length === 0 ? (
           <div style={{ 
             textAlign: 'center', 
             padding: '40px 20px', 
@@ -275,9 +358,9 @@ export default function Home() {
             borderRadius: '16px',
             boxShadow: '0 5px 20px rgba(0,0,0,0.05)'
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🎁</div>
-            <p style={{ fontSize: '1rem', color: '#555' }}>No products available yet.</p>
-            <p style={{ color: '#999', fontSize: '0.85rem' }}>Check back soon for amazing gifts!</p>
+            <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🔍</div>
+            <p style={{ fontSize: '1rem', color: '#555' }}>No products found.</p>
+            <p style={{ color: '#999', fontSize: '0.85rem' }}>Try searching for something else</p>
           </div>
         ) : (
           <div style={{ 
@@ -287,7 +370,7 @@ export default function Home() {
             maxWidth: '1400px',
             margin: '0 auto'
           }}>
-            {products.map((p, index) => (
+            {filteredProducts.map((p, index) => (
               <Link href={`/product/${p.id}`} key={p.id} style={{ textDecoration: 'none' }}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
