@@ -336,7 +336,6 @@ export default function Home() {
           </motion.a>
         
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* 🎵 TikTok Icon - Real PNG from CDN */}
 <motion.a 
   href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT" 
