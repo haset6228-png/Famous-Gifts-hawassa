@@ -123,13 +123,22 @@ export default function Home() {
           margin: '8px 12px'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '1.5rem' }}>🎁</span>
-          <div>
-            <h1 style={{ color: '#FF1493', margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>Famous Gifts</h1>
-            <p style={{ color: '#FF69B4', margin: 0, fontSize: '0.55rem', letterSpacing: '1px' }}>HAWASSA</p>
-          </div>
-        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  {/* Logo */}
+  <img 
+    src="/logo.png" 
+    alt="Famous Gifts Logo" 
+    style={{ 
+      height: '40px',
+      width: 'auto',
+      objectFit: 'contain'
+    }}
+  />
+  <div>
+    <h1 style={{ color: '#FF1493', margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>Famous Gifts</h1>
+    <p style={{ color: '#FF69B4', margin: 0, fontSize: '0.55rem', letterSpacing: '1px' }}>HAWASSA</p>
+  </div>
+</div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* 🎵 TikTok Icon - Real PNG from CDN */}

@@ -179,7 +179,15 @@ export default function ProductDetail() {
         border: '1px solid rgba(255, 105, 180, 0.1)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }} onClick={() => router.push('/')}>
-          <span style={{ fontSize: '1.5rem' }}>🎁</span>
+          <img 
+  src="/logo.png" 
+  alt="Famous Gifts Logo" 
+  style={{ 
+    height: '30px',
+    width: 'auto',
+    objectFit: 'contain'
+  }}
+/>
           <div>
             <h1 style={{ color: '#FF1493', margin: 0, fontSize: '1rem', fontWeight: '700' }}>Famous Gifts</h1>
             <p style={{ color: '#FF69B4', margin: 0, fontSize: '0.5rem', letterSpacing: '1px' }}>HAWASSA</p>
