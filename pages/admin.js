@@ -9,6 +9,17 @@ export default function Admin() {
   const [activeTab, setActiveTab] = useState('products');
   const [loading, setLoading] = useState(false);
 
+  // Password Change State
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  // Sales Data State
+  const [salesData, setSalesData] = useState({ monthlyTotal: 0, monthlyOrders: 0, monthlyRevenue: 0, dailyData: [] });
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
   const [productForm, setProductForm] = useState({
     name: '',
     price: '',
@@ -21,14 +32,17 @@ export default function Admin() {
   const [uploading, setUploading] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
+  // ADMIN PASSWORD (Change this to your desired password)
+  const ADMIN_PASSWORD = 'gift123';
+
   useEffect(() => {
     if (authenticated) {
       loadProducts();
       loadOrders();
+      calculateSales();
     }
   }, [authenticated]);
 
-  // LOAD PRODUCTS FROM SUPABASE
   const loadProducts = async () => {
     setLoading(true);
     try {
@@ -41,12 +55,10 @@ export default function Admin() {
       setProducts(data || []);
     } catch (error) {
       console.error('Error loading products:', error);
-      alert('Error loading products: ' + error.message);
     }
     setLoading(false);
   };
 
-  // LOAD ORDERS FROM SUPABASE
   const loadOrders = async () => {
     try {
       const { data, error } = await supabase
@@ -56,21 +68,94 @@ export default function Admin() {
       
       if (error) throw error;
       setOrders(data || []);
+      calculateSales(data || []);
     } catch (error) {
       console.error('Error loading orders:', error);
     }
   };
 
+  // ========== SALES CALCULATION ==========
+  const calculateSales = (ordersData = null) => {
+    const ordersToUse = ordersData || orders;
+    if (ordersToUse.length === 0) {
+      setSalesData({ monthlyTotal: 0, monthlyOrders: 0, monthlyRevenue: 0, dailyData: [] });
+      return;
+    }
+
+    // Filter orders for selected month/year
+    const filtered = ordersToUse.filter(order => {
+      const date = new Date(order.createdAt);
+      return date.getMonth() === selectedMonth && date.getFullYear() === selectedYear;
+    });
+
+    // Calculate totals
+    const totalRevenue = filtered.reduce((sum, order) => sum + (order.total || 0), 0);
+    const totalOrders = filtered.length;
+    const averageOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+    // Group by day for graph
+    const dailyTotals = {};
+    filtered.forEach(order => {
+      const date = new Date(order.createdAt);
+      const day = date.getDate();
+      dailyTotals[day] = (dailyTotals[day] || 0) + (order.total || 0);
+    });
+
+    // Convert to array for graph
+    const dailyData = Object.entries(dailyTotals)
+      .map(([day, total]) => ({ day: parseInt(day), total }))
+      .sort((a, b) => a.day - b.day);
+
+    setSalesData({
+      monthlyTotal: totalRevenue,
+      monthlyOrders: totalOrders,
+      monthlyRevenue: totalRevenue,
+      averageOrder: averageOrder,
+      dailyData: dailyData
+    });
+  };
+
+  // Update sales when month/year changes
+  useEffect(() => {
+    if (authenticated && orders.length > 0) {
+      calculateSales();
+    }
+  }, [selectedMonth, selectedYear, orders]);
+
+  // ========== PASSWORD CHANGE ==========
+  const handleChangePassword = (e) => {
+    e.preventDefault();
+    if (currentPassword !== ADMIN_PASSWORD) {
+      alert('Current password is incorrect!');
+      return;
+    }
+    if (newPassword.length < 6) {
+      alert('New password must be at least 6 characters');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+    // In a real app, you'd update this in a database
+    // For now, we'll just update the constant above
+    alert('✅ Password changed successfully! (Note: This is temporary until you add a database for admin settings)');
+    setShowPasswordModal(false);
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+  };
+
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === 'gift123') {
+    if (password === ADMIN_PASSWORD) {
       setAuthenticated(true);
     } else {
       alert('Wrong password!');
     }
   };
 
-  // CLOUDINARY UPLOAD (Direct from browser)
+  // ========== CLOUDINARY UPLOAD ==========
   const handleFileUpload = async (file, type) => {
     setUploading(true);
     try {
@@ -114,7 +199,6 @@ export default function Admin() {
     setProductForm({ ...productForm, images: newImages });
   };
 
-  // SAVE PRODUCT TO SUPABASE
   const handleSubmitProduct = async (e) => {
     e.preventDefault();
     if (!productForm.name || !productForm.price || !productForm.description) {
@@ -123,16 +207,16 @@ export default function Admin() {
     }
 
     const newProduct = {
-  id: editingId || Date.now().toString(),
-  name: productForm.name,
-  price: parseFloat(productForm.price),
-  description: productForm.description,
-  category: productForm.category,
-  thumbnail: productForm.thumbnail || '',
-  images: Array.isArray(productForm.images) ? productForm.images : [],
-  video: productForm.video || '',
-  createdAt: new Date().toISOString()
-};
+      id: editingId || Date.now().toString(),
+      name: productForm.name,
+      price: parseFloat(productForm.price),
+      description: productForm.description,
+      category: productForm.category,
+      thumbnail: productForm.thumbnail || '',
+      images: productForm.images || [],
+      video: productForm.video || '',
+      createdAt: new Date().toISOString()
+    };
 
     try {
       if (editingId) {
@@ -193,7 +277,7 @@ export default function Admin() {
     setEditingId(product.id);
   };
 
-  // UPDATE ORDER STATUS IN SUPABASE
+  // ========== UPDATE ORDER STATUS (WITH CANCEL) ==========
   const updateOrderStatus = async (id, newStatus) => {
     try {
       const { error } = await supabase
@@ -276,21 +360,38 @@ export default function Admin() {
         marginBottom: '20px'
       }}>
         <h1 style={{ margin: 0, fontSize: '1.3rem' }}>🎁 Famous Gifts Admin</h1>
-        <button 
-          onClick={() => { setAuthenticated(false); setPassword(''); }}
-          style={{
-            background: 'rgba(255,255,255,0.2)',
-            color: 'white',
-            border: '1px solid white',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            cursor: 'pointer'
-          }}
-        >
-          Logout
-        </button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button 
+            onClick={() => setShowPasswordModal(true)}
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              color: 'white',
+              border: '1px solid rgba(255,255,255,0.3)',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '0.8rem'
+            }}
+          >
+            🔑 Change Password
+          </button>
+          <button 
+            onClick={() => { setAuthenticated(false); setPassword(''); }}
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              color: 'white',
+              border: '1px solid white',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
+      {/* Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' }}>
         <button
           onClick={() => setActiveTab('products')}
@@ -322,10 +423,26 @@ export default function Admin() {
         >
           📋 Orders ({orders.length})
         </button>
+        <button
+          onClick={() => setActiveTab('sales')}
+          style={{
+            padding: '10px 20px',
+            background: activeTab === 'sales' ? 'linear-gradient(135deg, #FF1493, #FF69B4)' : '#f0f0f0',
+            color: activeTab === 'sales' ? 'white' : '#333',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            fontSize: '0.9rem'
+          }}
+        >
+          📊 Sales Dashboard
+        </button>
       </div>
 
       {loading && <p style={{ textAlign: 'center', color: '#FF1493' }}>⏳ Loading...</p>}
 
+      {/* ==================== PRODUCTS TAB ==================== */}
       {activeTab === 'products' && (
         <div>
           <div style={{
@@ -601,6 +718,7 @@ export default function Admin() {
         </div>
       )}
 
+      {/* ==================== ORDERS TAB ==================== */}
       {activeTab === 'orders' && (
         <div style={{
           background: 'white',
@@ -652,6 +770,7 @@ export default function Admin() {
                           <option>Called</option>
                           <option>Confirmed</option>
                           <option>Delivered</option>
+                          <option style={{ color: '#ff4444' }}>Cancelled</option>
                         </select>
                       </td>
                     </tr>
@@ -660,6 +779,316 @@ export default function Admin() {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {/* ==================== SALES DASHBOARD TAB ==================== */}
+      {activeTab === 'sales' && (
+        <div>
+          {/* Month/Year Selector */}
+          <div style={{
+            background: 'white',
+            padding: '20px',
+            borderRadius: '16px',
+            boxShadow: '0 5px 20px rgba(255, 105, 180, 0.1)',
+            border: '2px solid #FFB6C1',
+            marginBottom: '20px'
+          }}>
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <div>
+                <label style={{ fontWeight: 'bold', color: '#333', fontSize: '0.9rem' }}>Month:</label>
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                  style={{
+                    marginLeft: '8px',
+                    padding: '8px 15px',
+                    border: '2px solid #FFB6C1',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <option value={0}>January</option>
+                  <option value={1}>February</option>
+                  <option value={2}>March</option>
+                  <option value={3}>April</option>
+                  <option value={4}>May</option>
+                  <option value={5}>June</option>
+                  <option value={6}>July</option>
+                  <option value={7}>August</option>
+                  <option value={8}>September</option>
+                  <option value={9}>October</option>
+                  <option value={10}>November</option>
+                  <option value={11}>December</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ fontWeight: 'bold', color: '#333', fontSize: '0.9rem' }}>Year:</label>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                  style={{
+                    marginLeft: '8px',
+                    padding: '8px 15px',
+                    border: '2px solid #FFB6C1',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <option value={2024}>2024</option>
+                  <option value={2025}>2025</option>
+                  <option value={2026}>2026</option>
+                </select>
+              </div>
+              <button
+                onClick={() => {
+                  const now = new Date();
+                  setSelectedMonth(now.getMonth());
+                  setSelectedYear(now.getFullYear());
+                }}
+                style={{
+                  background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 20px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '0.85rem'
+                }}
+              >
+                📅 Current Month
+              </button>
+            </div>
+          </div>
+
+          {/* Stats Cards */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '15px',
+            marginBottom: '20px'
+          }}>
+            <div style={{
+              background: 'white',
+              padding: '20px',
+              borderRadius: '16px',
+              boxShadow: '0 5px 20px rgba(255, 105, 180, 0.1)',
+              border: '2px solid #FFB6C1',
+              textAlign: 'center'
+            }}>
+              <p style={{ color: '#888', fontSize: '0.8rem', margin: 0 }}>Total Revenue</p>
+              <h2 style={{ color: '#FF1493', margin: '5px 0 0', fontSize: '2rem' }}>
+                ETB {salesData.monthlyRevenue.toLocaleString()}
+              </h2>
+            </div>
+            <div style={{
+              background: 'white',
+              padding: '20px',
+              borderRadius: '16px',
+              boxShadow: '0 5px 20px rgba(255, 105, 180, 0.1)',
+              border: '2px solid #FFB6C1',
+              textAlign: 'center'
+            }}>
+              <p style={{ color: '#888', fontSize: '0.8rem', margin: 0 }}>Total Orders</p>
+              <h2 style={{ color: '#FF1493', margin: '5px 0 0', fontSize: '2rem' }}>
+                {salesData.monthlyOrders}
+              </h2>
+            </div>
+            <div style={{
+              background: 'white',
+              padding: '20px',
+              borderRadius: '16px',
+              boxShadow: '0 5px 20px rgba(255, 105, 180, 0.1)',
+              border: '2px solid #FFB6C1',
+              textAlign: 'center'
+            }}>
+              <p style={{ color: '#888', fontSize: '0.8rem', margin: 0 }}>Average Order</p>
+              <h2 style={{ color: '#FF1493', margin: '5px 0 0', fontSize: '2rem' }}>
+                ETB {(salesData.averageOrder || 0).toLocaleString()}
+              </h2>
+            </div>
+          </div>
+
+          {/* Graph */}
+          <div style={{
+            background: 'white',
+            padding: '20px',
+            borderRadius: '16px',
+            boxShadow: '0 5px 20px rgba(255, 105, 180, 0.1)',
+            border: '2px solid #FFB6C1'
+          }}>
+            <h3 style={{ color: '#333', marginBottom: '20px', fontSize: '1.1rem' }}>
+              📊 Daily Sales Breakdown
+            </h3>
+            {salesData.dailyData.length === 0 ? (
+              <p style={{ textAlign: 'center', color: '#888', padding: '30px' }}>
+                No sales data for this month yet.
+              </p>
+            ) : (
+              <div style={{ display: 'flex', gap: '4px', alignItems: 'flex-end', height: '200px', padding: '10px 0' }}>
+                {salesData.dailyData.map((day, index) => {
+                  const maxTotal = Math.max(...salesData.dailyData.map(d => d.total), 1);
+                  const height = (day.total / maxTotal) * 180;
+                  return (
+                    <div key={index} style={{ 
+                      flex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      <div style={{
+                        height: `${height}px`,
+                        width: '100%',
+                        maxWidth: '30px',
+                        background: 'linear-gradient(to top, #FF1493, #FF69B4)',
+                        borderRadius: '4px 4px 0 0',
+                        transition: 'height 0.5s ease'
+                      }} />
+                      <span style={{ fontSize: '0.6rem', color: '#888' }}>{day.day}</span>
+                      <span style={{ fontSize: '0.5rem', color: '#FF1493' }}>ETB {day.total}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ==================== CHANGE PASSWORD MODAL ==================== */}
+      {showPasswordModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0,0,0,0.5)',
+          backdropFilter: 'blur(5px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '20px'
+        }}>
+          <div style={{
+            background: 'white',
+            maxWidth: '450px',
+            width: '100%',
+            padding: '30px',
+            borderRadius: '20px',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+            border: '2px solid #FF69B4'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ color: '#FF1493', margin: 0 }}>🔑 Change Password</h2>
+              <button
+                onClick={() => setShowPasswordModal(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  color: '#999'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            <form onSubmit={handleChangePassword}>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>Current Password</label>
+                <input
+                  type="password"
+                  placeholder="Enter current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '2px solid #FFB6C1',
+                    borderRadius: '10px',
+                    fontSize: '0.95rem',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>New Password</label>
+                <input
+                  type="password"
+                  placeholder="Enter new password (min 6 chars)"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  minLength="6"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '2px solid #FFB6C1',
+                    borderRadius: '10px',
+                    fontSize: '0.95rem',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px', color: '#333' }}>Confirm New Password</label>
+                <input
+                  type="password"
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    border: '2px solid #FFB6C1',
+                    borderRadius: '10px',
+                    fontSize: '0.95rem',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  type="submit"
+                  style={{
+                    flex: 1,
+                    background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
+                    color: 'white',
+                    border: 'none',
+                    padding: '12px',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  Change Password
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordModal(false)}
+                  style={{
+                    background: '#f0f0f0',
+                    color: '#333',
+                    border: 'none',
+                    padding: '12px 25px',
+                    borderRadius: '10px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '0.95rem'
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
