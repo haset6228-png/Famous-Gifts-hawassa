@@ -55,7 +55,6 @@ export default function Home() {
     }
   };
 
-  // Filter products when search changes
   useEffect(() => {
     if (searchTerm.trim() === '') {
       setFilteredProducts(products);
@@ -102,23 +101,26 @@ export default function Home() {
       fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
     }}>
       
-      {/* Navigation Bar */}
+      {/* Navigation Bar - Glassmorphism */}
       <motion.nav 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', stiffness: 100 }}
         style={{
-          background: 'rgba(255, 255, 255, 0.95)',
+          background: 'rgba(255, 255, 255, 0.65)',
           backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          boxShadow: '0 8px 32px rgba(255, 105, 180, 0.15)',
           padding: '12px 16px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          boxShadow: '0 2px 30px rgba(255, 105, 180, 0.15)',
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          borderBottom: '2px solid rgba(255, 105, 180, 0.2)'
+          borderRadius: '16px',
+          margin: '8px 12px'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -129,35 +131,41 @@ export default function Home() {
           </div>
         </div>
         
-        <a 
+        {/* Glassmorphism Call Button */}
+        <motion.a 
           href="tel:+251909495969" 
+          whileHover={{ scale: 1.05, boxShadow: '0 8px 32px rgba(255, 20, 147, 0.35)' }}
+          whileTap={{ scale: 0.95 }}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
-            color: 'white',
+            background: 'rgba(255, 255, 255, 0.4)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.5)',
+            color: '#FF1493',
             padding: '8px 14px',
             borderRadius: '50px',
             textDecoration: 'none',
             fontWeight: '600',
             fontSize: '0.8rem',
-            boxShadow: '0 5px 20px rgba(255, 20, 147, 0.3)',
+            boxShadow: '0 4px 15px rgba(255, 20, 147, 0.15)',
           }}
         >
           <span style={{ fontSize: '1rem' }}>📞</span>
           Call
-        </a>
+        </motion.a>
       </motion.nav>
 
-      {/* Hero Carousel */}
+      {/* Hero Carousel with Glassmorphism */}
       <div style={{
         position: 'relative',
-        margin: '12px 12px 20px',
+        margin: '4px 12px 20px',
         borderRadius: '16px',
         overflow: 'hidden',
         height: '250px',
-        boxShadow: '0 10px 40px rgba(255, 20, 147, 0.2)',
+        boxShadow: '0 8px 32px rgba(255, 20, 147, 0.2)',
       }}>
         <AnimatePresence mode='wait'>
           <motion.div
@@ -181,7 +189,7 @@ export default function Home() {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(135deg, rgba(255,20,147,0.5), rgba(0,0,0,0.3))',
+              background: 'linear-gradient(135deg, rgba(255,20,147,0.4), rgba(0,0,0,0.2))',
             }} />
 
             <div style={{
@@ -217,19 +225,23 @@ export default function Home() {
                 }}>
                   {slides[currentSlide].subtitle}
                 </p>
+                {/* Glassmorphism Button */}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   style={{
-                    background: 'white',
-                    color: '#FF1493',
-                    border: 'none',
+                    background: 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.4)',
+                    color: 'white',
                     padding: '10px 28px',
                     borderRadius: '50px',
                     fontSize: '0.85rem',
                     fontWeight: '700',
                     cursor: 'pointer',
-                    boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    transition: 'all 0.3s ease'
                   }}
                   onClick={() => document.getElementById('products').scrollIntoView({ behavior: 'smooth' })}
                 >
@@ -257,11 +269,12 @@ export default function Home() {
                 width: currentSlide === index ? '24px' : '8px',
                 height: '8px',
                 borderRadius: '10px',
-                border: 'none',
-                background: currentSlide === index ? 'white' : 'rgba(255,255,255,0.5)',
+                border: '1px solid rgba(255,255,255,0.3)',
+                background: currentSlide === index ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                padding: 0
+                padding: 0,
+                backdropFilter: 'blur(5px)'
               }}
             />
           ))}
@@ -284,7 +297,7 @@ export default function Home() {
           </p>
         </div>
 
-        {/* 🔍 SEARCH BAR */}
+        {/* Glassmorphism Search Bar */}
         <div style={{ 
           maxWidth: '500px', 
           margin: '0 auto 20px',
@@ -293,11 +306,13 @@ export default function Home() {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            background: 'white',
+            background: 'rgba(255, 255, 255, 0.6)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
             borderRadius: '50px',
             padding: '4px 8px 4px 20px',
-            boxShadow: '0 2px 15px rgba(0,0,0,0.06)',
-            border: '2px solid #FFB6C1',
+            boxShadow: '0 4px 20px rgba(255, 105, 180, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
             transition: 'all 0.3s'
           }}>
             <input
@@ -331,11 +346,13 @@ export default function Home() {
               </button>
             )}
             <span style={{
-              background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
-              color: 'white',
-              padding: '8px 18px',
+              background: 'rgba(255, 20, 147, 0.3)',
+              backdropFilter: 'blur(5px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              color: '#FF1493',
+              padding: '6px 16px',
               borderRadius: '50px',
-              fontSize: '0.8rem',
+              fontSize: '0.75rem',
               fontWeight: '600'
             }}>
               {filteredProducts.length}
@@ -343,7 +360,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Show search results count */}
         {searchTerm && (
           <p style={{ textAlign: 'center', fontSize: '0.8rem', color: '#888', marginBottom: '15px' }}>
             Found {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
@@ -354,9 +370,11 @@ export default function Home() {
           <div style={{ 
             textAlign: 'center', 
             padding: '40px 20px', 
-            background: 'white', 
+            background: 'rgba(255, 255, 255, 0.6)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
             borderRadius: '16px',
-            boxShadow: '0 5px 20px rgba(0,0,0,0.05)'
+            boxShadow: '0 8px 32px rgba(0,0,0,0.05)'
           }}>
             <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🔍</div>
             <p style={{ fontSize: '1rem', color: '#555' }}>No products found.</p>
@@ -377,23 +395,25 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   whileHover={{ 
-                    y: -5,
-                    boxShadow: '0 15px 40px rgba(255, 105, 180, 0.2)'
+                    y: -8,
+                    boxShadow: '0 20px 60px rgba(255, 105, 180, 0.2)'
                   }}
                   style={{
-                    background: 'white',
+                    background: 'rgba(255, 255, 255, 0.7)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
                     borderRadius: '14px',
                     overflow: 'hidden',
-                    boxShadow: '0 4px 15px rgba(0,0,0,0.06)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    border: '1px solid rgba(255, 105, 180, 0.08)'
+                    transition: 'all 0.3s ease'
                   }}
                 >
                   <div style={{ 
                     position: 'relative',
                     height: '160px',
-                    background: '#f8f8f8',
+                    background: 'rgba(248, 248, 248, 0.5)',
                     overflow: 'hidden'
                   }}>
                     {p.thumbnail ? (
@@ -425,23 +445,27 @@ export default function Home() {
                         justifyContent: 'center',
                         height: '100%',
                         fontSize: '3rem',
-                        background: '#FFF0F5'
+                        background: 'rgba(255, 240, 245, 0.5)'
                       }}>
                         🎁
                       </div>
                     )}
                     
+                    {/* Glassmorphism Price Badge */}
                     <div style={{
                       position: 'absolute',
                       bottom: '8px',
                       right: '8px',
-                      background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
+                      background: 'rgba(255, 20, 147, 0.3)',
+                      backdropFilter: 'blur(5px)',
+                      WebkitBackdropFilter: 'blur(5px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
                       color: 'white',
                       padding: '4px 12px',
                       borderRadius: '20px',
                       fontSize: '0.75rem',
                       fontWeight: '700',
-                      boxShadow: '0 4px 15px rgba(255, 20, 147, 0.3)'
+                      boxShadow: '0 4px 15px rgba(255, 20, 147, 0.15)'
                     }}>
                       ETB {p.price.toLocaleString()}
                     </div>
@@ -466,12 +490,14 @@ export default function Home() {
                       marginTop: '6px'
                     }}>
                       <span style={{
-                        background: '#FFF0F5',
+                        background: 'rgba(255, 240, 245, 0.5)',
+                        backdropFilter: 'blur(5px)',
                         padding: '2px 10px',
                         borderRadius: '12px',
                         fontSize: '0.6rem',
                         color: '#FF1493',
-                        fontWeight: '500'
+                        fontWeight: '500',
+                        border: '1px solid rgba(255, 255, 255, 0.2)'
                       }}>
                         {p.category || 'Gifts'}
                       </span>
@@ -491,21 +517,27 @@ export default function Home() {
         )}
       </div>
 
-      {/* Footer */}
+      {/* Glassmorphism Footer */}
       <motion.footer
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         style={{
           textAlign: 'center',
           padding: '25px',
-          background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
+          background: 'rgba(255, 20, 147, 0.2)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
           color: 'white',
-          marginTop: '10px'
+          marginTop: '10px',
+          borderRadius: '16px',
+          margin: '10px 12px',
+          boxShadow: '0 8px 32px rgba(255, 20, 147, 0.1)'
         }}
       >
-        <p style={{ fontSize: '1rem', marginBottom: '3px' }}>🎁 Famous Gifts Hawassa</p>
-        <p style={{ opacity: 0.7, fontSize: '0.75rem' }}>© 2026 All rights reserved</p>
-        <p style={{ opacity: 0.6, fontSize: '0.7rem' }}>Call us: +251 90 949 5969</p>
+        <p style={{ fontSize: '1rem', marginBottom: '3px', color: '#FF1493' }}>🎁 Famous Gifts Hawassa</p>
+        <p style={{ opacity: 0.7, fontSize: '0.75rem', color: '#FF1493' }}>© 2026 All rights reserved</p>
+        <p style={{ opacity: 0.6, fontSize: '0.7rem', color: '#FF1493' }}>Call us: +251 90 949 5969</p>
       </motion.footer>
     </div>
   );
