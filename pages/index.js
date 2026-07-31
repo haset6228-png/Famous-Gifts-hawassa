@@ -101,7 +101,7 @@ export default function Home() {
       fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
     }}>
       
-      {/* Navigation Bar - Glassmorphism */}
+      {/* Navigation Bar - Glassmorphism with TikTok Icon */}
       <motion.nav 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -131,31 +131,67 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Glassmorphism Call Button */}
-        <motion.a 
-          href="tel:+251909495969" 
-          whileHover={{ scale: 1.05, boxShadow: '0 8px 32px rgba(255, 20, 147, 0.35)' }}
-          whileTap={{ scale: 0.95 }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: 'rgba(255, 255, 255, 0.4)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.5)',
-            color: '#FF1493',
-            padding: '8px 14px',
-            borderRadius: '50px',
-            textDecoration: 'none',
-            fontWeight: '600',
-            fontSize: '0.8rem',
-            boxShadow: '0 4px 15px rgba(255, 20, 147, 0.15)',
-          }}
-        >
-          <span style={{ fontSize: '1rem' }}>📞</span>
-          Call
-        </motion.a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* 🎵 TikTok Icon */}
+          <motion.a 
+            href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, rotate: -5 }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: 'rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              fontSize: '1.2rem',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              backdropFilter: 'blur(5px)',
+              color: '#FF1493'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(255, 20, 147, 0.15)';
+              e.target.style.borderColor = '#FF1493';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'rgba(0, 0, 0, 0.05)';
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            }}
+          >
+            🎵
+          </motion.a>
+          
+          {/* 📞 Call Button */}
+          <motion.a 
+            href="tel:+251909495969" 
+            whileHover={{ scale: 1.05, boxShadow: '0 8px 32px rgba(255, 20, 147, 0.35)' }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: 'rgba(255, 255, 255, 0.4)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.5)',
+              color: '#FF1493',
+              padding: '8px 14px',
+              borderRadius: '50px',
+              textDecoration: 'none',
+              fontWeight: '600',
+              fontSize: '0.8rem',
+              boxShadow: '0 4px 15px rgba(255, 20, 147, 0.15)',
+            }}
+          >
+            <span style={{ fontSize: '1rem' }}>📞</span>
+            Call
+          </motion.a>
+        </div>
       </motion.nav>
 
       {/* Hero Carousel with Glassmorphism */}
@@ -225,7 +261,6 @@ export default function Home() {
                 }}>
                   {slides[currentSlide].subtitle}
                 </p>
-                {/* Glassmorphism Button */}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -451,7 +486,6 @@ export default function Home() {
                       </div>
                     )}
                     
-                    {/* Glassmorphism Price Badge */}
                     <div style={{
                       position: 'absolute',
                       bottom: '8px',
@@ -517,7 +551,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* Glassmorphism Footer */}
+      {/* Glassmorphism Footer with TikTok */}
       <motion.footer
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -536,6 +570,32 @@ export default function Home() {
         }}
       >
         <p style={{ fontSize: '1rem', marginBottom: '3px', color: '#FF1493' }}>🎁 Famous Gifts Hawassa</p>
+        
+        {/* TikTok Icon in Footer */}
+        <motion.a
+          href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.2, rotate: -5 }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '45px',
+            height: '45px',
+            borderRadius: '50%',
+            background: 'rgba(255, 255, 255, 0.15)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            fontSize: '1.6rem',
+            textDecoration: 'none',
+            color: '#FF1493',
+            transition: 'all 0.3s ease',
+            margin: '8px 0'
+          }}
+        >
+          🎵
+        </motion.a>
+        
         <p style={{ opacity: 0.7, fontSize: '0.75rem', color: '#FF1493' }}>© 2026 All rights reserved</p>
         <p style={{ opacity: 0.6, fontSize: '0.7rem', color: '#FF1493' }}>Call us: +251 90 949 5969</p>
       </motion.footer>
