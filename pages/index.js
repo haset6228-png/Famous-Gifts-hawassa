@@ -9,6 +9,7 @@ export default function Home() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [darkMode, setDarkMode] = useState(false);
 
   const slides = [
     {
@@ -81,194 +82,123 @@ export default function Home() {
     setCurrentSlide(index);
   };
 
+  // ========== LOADING SKELETON ==========
   if (!isClient) {
-  return (
-    <div style={{ 
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 50%, #FFD6E5 100%)',
-      fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-      padding: '12px'
-    }}>
-      
-      {/* Skeleton Navigation */}
-      <div style={{
-        background: 'rgba(255, 255, 255, 0.65)',
-        backdropFilter: 'blur(10px)',
-        borderRadius: '16px',
-        padding: '12px 16px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '12px',
-        border: '1px solid rgba(255, 255, 255, 0.3)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Skeleton icon */}
-          <div style={{ 
-            width: '36px', 
-            height: '36px', 
-            background: '#e8e8e8', 
-            borderRadius: '50%',
-            animation: 'pulse 1.5s ease-in-out infinite'
-          }} />
-          <div>
-            {/* Skeleton title */}
-            <div style={{ 
-              width: '120px', 
-              height: '16px', 
-              background: '#e8e8e8', 
-              borderRadius: '4px',
-              marginBottom: '4px',
-              animation: 'pulse 1.5s ease-in-out infinite'
-            }} />
-            {/* Skeleton subtitle */}
-            <div style={{ 
-              width: '60px', 
-              height: '10px', 
-              background: '#e8e8e8', 
-              borderRadius: '4px',
-              animation: 'pulse 1.5s ease-in-out infinite',
-              animationDelay: '0.2s'
-            }} />
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          {/* Skeleton TikTok icon */}
-          <div style={{ 
-            width: '36px', 
-            height: '36px', 
-            background: '#e8e8e8', 
-            borderRadius: '50%',
-            animation: 'pulse 1.5s ease-in-out infinite',
-            animationDelay: '0.3s'
-          }} />
-          {/* Skeleton Call button */}
-          <div style={{ 
-            width: '80px', 
-            height: '36px', 
-            background: '#e8e8e8', 
-            borderRadius: '50px',
-            animation: 'pulse 1.5s ease-in-out infinite',
-            animationDelay: '0.4s'
-          }} />
-        </div>
-      </div>
-
-      {/* Skeleton Promo Banner */}
-      <div style={{
-        height: '36px',
-        background: '#e8e8e8',
-        borderRadius: '12px',
-        marginBottom: '12px',
-        animation: 'pulse 1.5s ease-in-out infinite',
-        animationDelay: '0.1s'
-      }} />
-
-      {/* Skeleton Hero Carousel */}
-      <div style={{
-        height: '250px',
-        background: 'linear-gradient(135deg, #e8e8e8, #f0f0f0)',
-        borderRadius: '16px',
-        marginBottom: '20px',
-        animation: 'pulse 1.5s ease-in-out infinite',
-        animationDelay: '0.2s'
-      }} />
-
-      {/* Skeleton Search Bar */}
-      <div style={{
-        maxWidth: '500px',
-        margin: '0 auto 20px',
-        padding: '0 10px'
+    return (
+      <div style={{ 
+        minHeight: '100vh',
+        background: darkMode ? '#1a1a2e' : 'linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 50%, #FFD6E5 100%)',
+        fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+        padding: '12px'
       }}>
         <div style={{
+          background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255, 255, 255, 0.65)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '16px',
+          padding: '12px 16px',
           display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          background: 'rgba(255, 255, 255, 0.6)',
-          borderRadius: '50px',
-          padding: '4px 8px 4px 20px',
-          border: '1px solid rgba(255, 255, 255, 0.3)',
-          height: '48px',
-          animation: 'pulse 1.5s ease-in-out infinite',
-          animationDelay: '0.3s'
+          marginBottom: '12px',
+          border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255, 255, 255, 0.3)'
         }}>
-          <div style={{ flex: 1, height: '20px', background: '#e8e8e8', borderRadius: '4px' }} />
-          <div style={{ width: '60px', height: '30px', background: '#e8e8e8', borderRadius: '50px' }} />
-        </div>
-      </div>
-
-      {/* Skeleton Products Grid */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(155px, 1fr))', 
-        gap: '14px',
-        padding: '0 12px'
-      }}>
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-          <div key={i} style={{
-            background: 'white',
-            borderRadius: '14px',
-            overflow: 'hidden',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.04)',
-            animation: 'pulse 1.5s ease-in-out infinite',
-            animationDelay: `${i * 0.08}s`
-          }}>
-            {/* Skeleton Image */}
-            <div style={{
-              height: '160px',
-              background: '#e8e8e8'
-            }} />
-            {/* Skeleton Text */}
-            <div style={{ padding: '12px 14px 14px' }}>
-              <div style={{
-                height: '14px',
-                background: '#e8e8e8',
-                borderRadius: '4px',
-                marginBottom: '8px'
-              }} />
-              <div style={{
-                height: '10px',
-                background: '#e8e8e8',
-                borderRadius: '4px',
-                width: '60%'
-              }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '36px', height: '36px', background: darkMode ? '#333' : '#e8e8e8', borderRadius: '50%', animation: 'pulse 1.5s ease-in-out infinite' }} />
+            <div>
+              <div style={{ width: '120px', height: '16px', background: darkMode ? '#333' : '#e8e8e8', borderRadius: '4px', marginBottom: '4px', animation: 'pulse 1.5s ease-in-out infinite' }} />
+              <div style={{ width: '60px', height: '10px', background: darkMode ? '#333' : '#e8e8e8', borderRadius: '4px', animation: 'pulse 1.5s ease-in-out infinite', animationDelay: '0.2s' }} />
             </div>
           </div>
-        ))}
-      </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ width: '36px', height: '36px', background: darkMode ? '#333' : '#e8e8e8', borderRadius: '50%', animation: 'pulse 1.5s ease-in-out infinite', animationDelay: '0.3s' }} />
+            <div style={{ width: '80px', height: '36px', background: darkMode ? '#333' : '#e8e8e8', borderRadius: '50px', animation: 'pulse 1.5s ease-in-out infinite', animationDelay: '0.4s' }} />
+          </div>
+        </div>
 
-      {/* Pulse Animation */}
-      <style jsx>{`
-        @keyframes pulse {
-          0%, 100% { 
-            opacity: 1;
+        <div style={{
+          height: '36px',
+          background: darkMode ? '#333' : '#e8e8e8',
+          borderRadius: '12px',
+          marginBottom: '12px',
+          animation: 'pulse 1.5s ease-in-out infinite',
+          animationDelay: '0.1s'
+        }} />
+
+        <div style={{
+          height: '250px',
+          background: darkMode ? '#2a2a3e' : 'linear-gradient(135deg, #e8e8e8, #f0f0f0)',
+          borderRadius: '16px',
+          marginBottom: '20px',
+          animation: 'pulse 1.5s ease-in-out infinite',
+          animationDelay: '0.2s'
+        }} />
+
+        <div style={{ maxWidth: '500px', margin: '0 auto 20px', padding: '0 10px' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255, 255, 255, 0.6)',
+            borderRadius: '50px',
+            padding: '4px 8px 4px 20px',
+            border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255, 255, 255, 0.3)',
+            height: '48px',
+            animation: 'pulse 1.5s ease-in-out infinite',
+            animationDelay: '0.3s'
+          }}>
+            <div style={{ flex: 1, height: '20px', background: darkMode ? '#333' : '#e8e8e8', borderRadius: '4px' }} />
+            <div style={{ width: '60px', height: '30px', background: darkMode ? '#333' : '#e8e8e8', borderRadius: '50px' }} />
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(155px, 1fr))', gap: '14px', padding: '0 12px' }}>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div key={i} style={{
+              background: darkMode ? '#2a2a3e' : 'white',
+              borderRadius: '14px',
+              overflow: 'hidden',
+              boxShadow: darkMode ? '0 4px 15px rgba(0,0,0,0.2)' : '0 4px 15px rgba(0,0,0,0.04)',
+              animation: 'pulse 1.5s ease-in-out infinite',
+              animationDelay: `${i * 0.08}s`
+            }}>
+              <div style={{ height: '160px', background: darkMode ? '#333' : '#e8e8e8' }} />
+              <div style={{ padding: '12px 14px 14px' }}>
+                <div style={{ height: '14px', background: darkMode ? '#333' : '#e8e8e8', borderRadius: '4px', marginBottom: '8px' }} />
+                <div style={{ height: '10px', background: darkMode ? '#333' : '#e8e8e8', borderRadius: '4px', width: '60%' }} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <style jsx>{`
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
           }
-          50% { 
-            opacity: 0.5;
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div style={{ 
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 50%, #FFD6E5 100%)',
-      fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
+      background: darkMode ? '#1a1a2e' : 'linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 50%, #FFD6E5 100%)',
+      fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+      transition: 'all 0.5s ease',
+      color: darkMode ? '#f0f0f0' : '#333'
     }}>
       
-      {/* Navigation Bar with TikTok & Telegram Icons */}
+      {/* Navigation Bar */}
       <motion.nav 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', stiffness: 100 }}
         style={{
-          background: 'rgba(255, 255, 255, 0.65)',
+          background: darkMode ? 'rgba(26, 26, 46, 0.85)' : 'rgba(255, 255, 255, 0.65)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.3)',
-          boxShadow: '0 8px 32px rgba(255, 105, 180, 0.15)',
+          border: darkMode ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(255, 255, 255, 0.3)',
+          boxShadow: darkMode ? '0 8px 32px rgba(0, 0, 0, 0.3)' : '0 8px 32px rgba(255, 105, 180, 0.15)',
           padding: '12px 16px',
           display: 'flex',
           justifyContent: 'space-between',
@@ -281,14 +211,48 @@ export default function Home() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '1.5rem' }}>🎁</span>
+          <img 
+            src="/logo.png" 
+            alt="Famous Gifts" 
+            style={{ 
+              height: '36px', 
+              width: 'auto', 
+              maxWidth: '36px',
+              objectFit: 'contain',
+              borderRadius: '8px'
+            }}
+          />
           <div>
-            <h1 style={{ color: '#FF1493', margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>Famous Gifts</h1>
-            <p style={{ color: '#FF69B4', margin: 0, fontSize: '0.55rem', letterSpacing: '1px' }}>HAWASSA</p>
+            <h1 style={{ color: darkMode ? '#FF69B4' : '#FF1493', margin: 0, fontSize: '1.1rem', fontWeight: '700' }}>Famous Gifts</h1>
+            <p style={{ color: darkMode ? '#FF69B4' : '#FF69B4', margin: 0, fontSize: '0.55rem', letterSpacing: '1px' }}>HAWASSA</p>
           </div>
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* 🌙 Dark Mode Toggle */}
+          <motion.button
+            onClick={() => setDarkMode(!darkMode)}
+            whileHover={{ scale: 1.1, rotate: 15 }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              background: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '50%',
+              width: '36px',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.2rem',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              color: darkMode ? '#FFD700' : '#FF1493'
+            }}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </motion.button>
+
           {/* ✈️ Telegram Icon */}
           <motion.a 
             href="https://t.me/Famous_gift" 
@@ -303,21 +267,11 @@ export default function Home() {
               width: '36px',
               height: '36px',
               borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255, 255, 255, 0.1)',
+              border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255, 255, 255, 0.2)',
               textDecoration: 'none',
               transition: 'all 0.3s ease',
               backdropFilter: 'blur(5px)',
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(0, 136, 204, 0.2)';
-              e.target.style.borderColor = '#0088cc';
-              e.target.style.boxShadow = '0 4px 20px rgba(0, 136, 204, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.1)';
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-              e.target.style.boxShadow = 'none';
             }}
           >
             <svg 
@@ -334,45 +288,36 @@ export default function Home() {
               />
             </svg>
           </motion.a>
-        
-        
-          {/* 🎵 TikTok Icon - Real PNG from CDN */}
-<motion.a 
-  href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT" 
-  target="_blank" 
-  rel="noopener noreferrer"
-  whileHover={{ scale: 1.15, rotate: -5 }}
-  whileTap={{ scale: 0.9 }}
-  style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '36px',
-    height: '36px',
-    borderRadius: '50%',
-    background: 'rgba(0, 0, 0, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    textDecoration: 'none',
-    transition: 'all 0.3s ease',
-    backdropFilter: 'blur(5px)',
-    overflow: 'hidden',
-    padding: '4px'
-  }}
-  onMouseEnter={(e) => {
-    e.target.style.background = 'rgba(255, 20, 147, 0.15)';
-    e.target.style.borderColor = '#FF1493';
-  }}
-  onMouseLeave={(e) => {
-    e.target.style.background = 'rgba(0, 0, 0, 0.05)';
-    e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-  }}
->
-  <img 
-    src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" 
-    alt="TikTok" 
-    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-  />
-</motion.a>
+
+          {/* 🎵 TikTok Icon */}
+          <motion.a 
+            href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, rotate: -5 }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0, 0, 0, 0.05)',
+              border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255, 255, 255, 0.2)',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              backdropFilter: 'blur(5px)',
+              overflow: 'hidden',
+              padding: '4px'
+            }}
+          >
+            <img 
+              src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" 
+              alt="TikTok" 
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          </motion.a>
           
           {/* 📞 Call Button */}
           <motion.a 
@@ -383,17 +328,17 @@ export default function Home() {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: 'rgba(255, 255, 255, 0.4)',
+              background: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.4)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.5)',
-              color: '#FF1493',
+              border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255, 255, 255, 0.5)',
+              color: darkMode ? '#FF69B4' : '#FF1493',
               padding: '8px 14px',
               borderRadius: '50px',
               textDecoration: 'none',
               fontWeight: '600',
               fontSize: '0.8rem',
-              boxShadow: '0 4px 15px rgba(255, 20, 147, 0.15)',
+              boxShadow: darkMode ? '0 4px 15px rgba(0,0,0,0.2)' : '0 4px 15px rgba(255, 20, 147, 0.15)',
             }}
           >
             <span style={{ fontSize: '1rem' }}>📞</span>
@@ -402,14 +347,14 @@ export default function Home() {
         </div>
       </motion.nav>
 
-      {/* Hero Carousel with Glassmorphism */}
+      {/* Hero Carousel */}
       <div style={{
         position: 'relative',
         margin: '4px 12px 20px',
         borderRadius: '16px',
         overflow: 'hidden',
         height: '250px',
-        boxShadow: '0 8px 32px rgba(255, 20, 147, 0.2)',
+        boxShadow: darkMode ? '0 8px 32px rgba(0,0,0,0.3)' : '0 8px 32px rgba(255, 20, 147, 0.2)',
       }}>
         <AnimatePresence mode='wait'>
           <motion.div
@@ -475,7 +420,6 @@ export default function Home() {
                   style={{
                     background: 'rgba(255, 255, 255, 0.25)',
                     backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
                     border: '1px solid rgba(255, 255, 255, 0.4)',
                     color: 'white',
                     padding: '10px 28px',
@@ -524,23 +468,23 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Products Section with Search Bar */}
+      {/* Products Section */}
       <div id="products" style={{ padding: '10px 12px 40px' }}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
           <h2 style={{ 
             fontSize: '1.5rem', 
-            color: '#333', 
+            color: darkMode ? '#FF69B4' : '#333', 
             marginBottom: '4px',
             fontWeight: '600'
           }}>
             Our Collection 🎀
           </h2>
-          <p style={{ color: '#888', fontSize: '0.85rem' }}>
+          <p style={{ color: darkMode ? '#888' : '#888', fontSize: '0.85rem' }}>
             {products.length} products available
           </p>
         </div>
 
-        {/* Glassmorphism Search Bar */}
+        {/* Search Bar */}
         <div style={{ 
           maxWidth: '500px', 
           margin: '0 auto 20px',
@@ -549,13 +493,12 @@ export default function Home() {
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            background: 'rgba(255, 255, 255, 0.6)',
+            background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255, 255, 255, 0.6)',
             backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
             borderRadius: '50px',
             padding: '4px 8px 4px 20px',
-            boxShadow: '0 4px 20px rgba(255, 105, 180, 0.1)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: darkMode ? '0 4px 20px rgba(0,0,0,0.2)' : '0 4px 20px rgba(255, 105, 180, 0.1)',
+            border: darkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255, 255, 255, 0.3)',
             transition: 'all 0.3s'
           }}>
             <input
@@ -570,7 +513,7 @@ export default function Home() {
                 fontSize: '0.9rem',
                 outline: 'none',
                 background: 'transparent',
-                color: '#333'
+                color: darkMode ? '#f0f0f0' : '#333'
               }}
             />
             {searchTerm && (
@@ -579,7 +522,7 @@ export default function Home() {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#999',
+                  color: darkMode ? '#666' : '#999',
                   cursor: 'pointer',
                   padding: '8px',
                   fontSize: '1.1rem'
@@ -589,10 +532,10 @@ export default function Home() {
               </button>
             )}
             <span style={{
-              background: 'rgba(255, 20, 147, 0.3)',
+              background: darkMode ? 'rgba(255, 20, 147, 0.3)' : 'rgba(255, 20, 147, 0.3)',
               backdropFilter: 'blur(5px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: '#FF1493',
+              border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255, 255, 255, 0.2)',
+              color: darkMode ? '#FF69B4' : '#FF1493',
               padding: '6px 16px',
               borderRadius: '50px',
               fontSize: '0.75rem',
@@ -604,7 +547,7 @@ export default function Home() {
         </div>
 
         {searchTerm && (
-          <p style={{ textAlign: 'center', fontSize: '0.8rem', color: '#888', marginBottom: '15px' }}>
+          <p style={{ textAlign: 'center', fontSize: '0.8rem', color: darkMode ? '#666' : '#888', marginBottom: '15px' }}>
             Found {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''}
           </p>
         )}
@@ -613,15 +556,15 @@ export default function Home() {
           <div style={{ 
             textAlign: 'center', 
             padding: '40px 20px', 
-            background: 'rgba(255, 255, 255, 0.6)',
+            background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255, 255, 255, 0.6)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
+            border: darkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255, 255, 255, 0.3)',
             borderRadius: '16px',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.05)'
+            boxShadow: darkMode ? '0 8px 32px rgba(0,0,0,0.2)' : '0 8px 32px rgba(0,0,0,0.05)'
           }}>
             <div style={{ fontSize: '3rem', marginBottom: '15px' }}>🔍</div>
-            <p style={{ fontSize: '1rem', color: '#555' }}>No products found.</p>
-            <p style={{ color: '#999', fontSize: '0.85rem' }}>Try searching for something else</p>
+            <p style={{ fontSize: '1rem', color: darkMode ? '#aaa' : '#555' }}>No products found.</p>
+            <p style={{ color: darkMode ? '#666' : '#999', fontSize: '0.85rem' }}>Try searching for something else</p>
           </div>
         ) : (
           <div style={{ 
@@ -639,16 +582,16 @@ export default function Home() {
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   whileHover={{ 
                     y: -8,
-                    boxShadow: '0 20px 60px rgba(255, 105, 180, 0.2)'
+                    boxShadow: darkMode ? '0 20px 60px rgba(255,20,147,0.2)' : '0 20px 60px rgba(255, 105, 180, 0.2)'
                   }}
                   style={{
-                    background: 'rgba(255, 255, 255, 0.7)',
+                    background: darkMode ? 'rgba(40, 40, 60, 0.85)' : 'rgba(255, 255, 255, 0.7)',
                     backdropFilter: 'blur(10px)',
                     WebkitBackdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    border: darkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255, 255, 255, 0.3)',
                     borderRadius: '14px',
                     overflow: 'hidden',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+                    boxShadow: darkMode ? '0 4px 20px rgba(0,0,0,0.2)' : '0 4px 20px rgba(0,0,0,0.04)',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease'
                   }}
@@ -656,7 +599,7 @@ export default function Home() {
                   <div style={{ 
                     position: 'relative',
                     height: '160px',
-                    background: 'rgba(248, 248, 248, 0.5)',
+                    background: darkMode ? 'rgba(50,50,70,0.5)' : 'rgba(248, 248, 248, 0.5)',
                     overflow: 'hidden'
                   }}>
                     {p.thumbnail ? (
@@ -688,7 +631,7 @@ export default function Home() {
                         justifyContent: 'center',
                         height: '100%',
                         fontSize: '3rem',
-                        background: 'rgba(255, 240, 245, 0.5)'
+                        background: darkMode ? 'rgba(255,20,147,0.1)' : 'rgba(255, 240, 245, 0.5)'
                       }}>
                         🎁
                       </div>
@@ -717,7 +660,7 @@ export default function Home() {
                     <h3 style={{ 
                       margin: 0, 
                       fontSize: '0.9rem', 
-                      color: '#333',
+                      color: darkMode ? '#f0f0f0' : '#333',
                       fontWeight: '600',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
@@ -732,20 +675,20 @@ export default function Home() {
                       marginTop: '6px'
                     }}>
                       <span style={{
-                        background: 'rgba(255, 240, 245, 0.5)',
+                        background: darkMode ? 'rgba(255,20,147,0.15)' : 'rgba(255, 240, 245, 0.5)',
                         backdropFilter: 'blur(5px)',
                         padding: '2px 10px',
                         borderRadius: '12px',
                         fontSize: '0.6rem',
-                        color: '#FF1493',
+                        color: darkMode ? '#FF69B4' : '#FF1493',
                         fontWeight: '500',
-                        border: '1px solid rgba(255, 255, 255, 0.2)'
+                        border: darkMode ? '1px solid rgba(255,20,147,0.2)' : '1px solid rgba(255, 255, 255, 0.2)'
                       }}>
                         {p.category || 'Gifts'}
                       </span>
                       <span style={{
                         fontSize: '0.65rem',
-                        color: '#FF69B4',
+                        color: darkMode ? '#FF69B4' : '#FF69B4',
                         fontWeight: '500'
                       }}>
                         View →
@@ -759,57 +702,91 @@ export default function Home() {
         )}
       </div>
 
-      {/* Glassmorphism Footer with TikTok */}
+      {/* Footer */}
       <motion.footer
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         style={{
           textAlign: 'center',
           padding: '25px',
-          background: 'rgba(255, 20, 147, 0.2)',
+          background: darkMode ? 'rgba(255, 20, 147, 0.08)' : 'rgba(255, 20, 147, 0.2)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          color: 'white',
+          border: darkMode ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(255, 255, 255, 0.2)',
+          color: darkMode ? '#f0f0f0' : 'white',
           marginTop: '10px',
           borderRadius: '16px',
           margin: '10px 12px',
-          boxShadow: '0 8px 32px rgba(255, 20, 147, 0.1)'
+          boxShadow: darkMode ? '0 8px 32px rgba(0,0,0,0.2)' : '0 8px 32px rgba(255, 20, 147, 0.1)'
         }}
       >
-        <p style={{ fontSize: '1rem', marginBottom: '3px', color: '#FF1493' }}>🎁 Famous Gifts Hawassa</p>
+        <p style={{ fontSize: '1rem', marginBottom: '3px', color: darkMode ? '#FF69B4' : '#13000a' }}>FAMOUS GIFTS HAWASSA</p>
         
-        {/* TikTok Icon in Footer - Real PNG */}
-<motion.a
-  href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT"
-  target="_blank"
-  rel="noopener noreferrer"
-  whileHover={{ scale: 1.2, rotate: -5 }}
-  style={{
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '45px',
-    height: '45px',
-    borderRadius: '50%',
-    background: 'rgba(255, 255, 255, 0.15)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    textDecoration: 'none',
-    transition: 'all 0.3s ease',
-    margin: '8px 0',
-    overflow: 'hidden',
-    padding: '6px'
-  }}
->
-  <img 
-    src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" 
-    alt="TikTok" 
-    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-  />
-</motion.a>
+        {/* Social Links */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', margin: '10px 0' }}>
+          <motion.a
+            href="https://t.me/Famous_gift"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.2, rotate: -5 }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '44px',
+              height: '44px',
+              borderRadius: '50%',
+              background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255, 255, 255, 0.15)',
+              border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255, 255, 255, 0.2)',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            <svg 
+              width="24" 
+              height="24" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ display: 'block' }}
+            >
+              <path 
+                d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" 
+                fill="#0088cc"
+              />
+            </svg>
+          </motion.a>
+
+          <motion.a
+            href="https://www.tiktok.com/@.gifts.hawassa?_r=1&_t=ZS-98UEJl7wNoT"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.2, rotate: -5 }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '44px',
+              height: '44px',
+              borderRadius: '50%',
+              background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(255, 255, 255, 0.15)',
+              border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255, 255, 255, 0.2)',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              overflow: 'hidden',
+              padding: '6px'
+            }}
+          >
+            <img 
+              src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png" 
+              alt="TikTok" 
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          </motion.a>
+        </div>
         
-        <p style={{ opacity: 0.7, fontSize: '0.75rem', color: '#FF1493' }}>© 2026 All rights reserved</p>
-        <p style={{ opacity: 0.6, fontSize: '0.7rem', color: '#FF1493' }}>Call us: +251 90 949 5969</p>
+        <p style={{ opacity: 0.7, fontSize: '0.75rem', color: darkMode ? '#efe8e8' : '#03000e' }}>© 2026 All rights reserved</p>
+        <p style={{ opacity: 0.6, fontSize: '0.7rem', color: darkMode ? '#efe5e5' : '#00000f' }}>Call us: +251 90 949 5969</p>
       </motion.footer>
     </div>
   );
