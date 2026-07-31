@@ -29,6 +29,8 @@ export default function ProductDetail() {
       
       if (!error && data) {
         setProduct(data);
+        console.log('Product data:', data);
+        console.log('Images:', data.images);
       }
       setLoading(false);
     } catch (error) {
@@ -119,13 +121,39 @@ export default function ProductDetail() {
     );
   }
 
-  // Ensure images is always an array, even if product.images is null or an object
-  const rawImages = product.images || [];
-  const images = Array.isArray(rawImages) ? rawImages : Object.values(rawImages);
-  
-  // Fallback if no images exist
-  const imagesToDisplay = images.length > 0 ? images : (product.thumbnail ? [product.thumbnail] : []);
-  
+  // FIX: Properly handle images array
+  let images = [];
+  if (product.images) {
+    // If it's already an array
+    if (Array.isArray(product.images)) {
+      images = product.images;
+    } 
+    // If it's a string that looks like an array
+    else if (typeof product.images === 'string') {
+      try {
+        // Try to parse as JSON
+        const parsed = JSON.parse(product.images);
+        if (Array.isArray(parsed)) {
+          images = parsed;
+        } else if (parsed && typeof parsed === 'string' && parsed.startsWith('http')) {
+          images = [parsed];
+        }
+      } catch (e) {
+        // If it's a single URL string
+        if (product.images.startsWith('http')) {
+          images = [product.images];
+        }
+      }
+    }
+  }
+
+  // If no images, use thumbnail as fallback
+  if (images.length === 0 && product.thumbnail) {
+    images = [product.thumbnail];
+  }
+
+  console.log('Final images array:', images);
+
   const hasVideo = product.video && product.video.length > 0;
 
   return (
@@ -207,7 +235,8 @@ export default function ProductDetail() {
           background: '#fafafa',
           padding: '16px',
         }}>
-          {hasVideo && imagesToDisplay.length > 0 && (
+          {/* Tab Switcher */}
+          {hasVideo && images.length > 0 && (
             <div style={{
               display: 'flex',
               gap: '8px',
@@ -232,7 +261,7 @@ export default function ProductDetail() {
                   transition: 'all 0.3s'
                 }}
               >
-                📸 Photos ({imagesToDisplay.length})
+                📸 Photos ({images.length})
               </button>
               <button
                 onClick={() => setActiveTab('video')}
@@ -254,12 +283,13 @@ export default function ProductDetail() {
             </div>
           )}
 
+          {/* Photos Tab */}
           {activeTab === 'photos' && (
             <>
               <div style={{ width: '100%', marginBottom: '12px' }}>
-                {imagesToDisplay.length > 0 ? (
+                {images.length > 0 ? (
                   <img
-                    src={imagesToDisplay[selectedImage]}
+                    src={images[selectedImage]}
                     alt={product.name}
                     style={{
                       width: '100%',
@@ -268,6 +298,10 @@ export default function ProductDetail() {
                       borderRadius: '12px',
                       background: 'white',
                       boxShadow: '0 2px 15px rgba(0,0,0,0.05)'
+                    }}
+                    onError={(e) => {
+                      console.log('Image failed to load:', images[selectedImage]);
+                      e.target.style.display = 'none';
                     }}
                   />
                 ) : (
@@ -285,8 +319,7 @@ export default function ProductDetail() {
                 )}
               </div>
 
-              {/* FIX: Corrected .map variables here */}
-              {imagesToDisplay.length > 1 && (
+              {images.length > 1 && (
                 <div style={{
                   display: 'flex',
                   gap: '8px',
@@ -295,7 +328,7 @@ export default function ProductDetail() {
                   padding: '4px 0',
                   WebkitOverflowScrolling: 'touch'
                 }}>
-                  {imagesToDisplay.map((img, index) => (
+                  {images.map((img, index) => (
                     <div
                       key={index}
                       onClick={() => setSelectedImage(index)}
@@ -318,6 +351,10 @@ export default function ProductDetail() {
                           height: '100%',
                           objectFit: 'cover'
                         }}
+                        onError={(e) => {
+                          console.log('Thumbnail failed to load:', img);
+                          e.target.style.display = 'none';
+                        }}
                       />
                     </div>
                   ))}
@@ -326,6 +363,7 @@ export default function ProductDetail() {
             </>
           )}
 
+          {/* Video Tab */}
           {activeTab === 'video' && hasVideo && (
             <div style={{ width: '100%' }}>
               <video

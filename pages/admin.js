@@ -123,16 +123,16 @@ export default function Admin() {
     }
 
     const newProduct = {
-      id: editingId || Date.now().toString(),
-      name: productForm.name,
-      price: parseFloat(productForm.price),
-      description: productForm.description,
-      category: productForm.category,
-      thumbnail: productForm.thumbnail || '',
-      images: productForm.images || [],
-      video: productForm.video || '',
-      createdAt: new Date().toISOString()
-    };
+  id: editingId || Date.now().toString(),
+  name: productForm.name,
+  price: parseFloat(productForm.price),
+  description: productForm.description,
+  category: productForm.category,
+  thumbnail: productForm.thumbnail || '',
+  images: Array.isArray(productForm.images) ? productForm.images : [],
+  video: productForm.video || '',
+  createdAt: new Date().toISOString()
+};
 
     try {
       if (editingId) {
