@@ -78,8 +78,9 @@ export default function ProductDetail() {
       existing.push(order);
       localStorage.setItem('orders', JSON.stringify(existing));
       
-       try {
-      const telegramMessage = `
+      // Send Telegram Alert
+      try {
+        const telegramMessage = `
 📦 <b>New Order Alert!</b>
 👤 Customer: ${order.name}
 📱 Phone: ${order.phone}
@@ -89,36 +90,18 @@ export default function ProductDetail() {
 💰 Total: ETB ${order.total}
 🕐 Time: ${new Date().toLocaleString()}
 🔗 View: https://hawassagift.shop/admin
-      `.trim();
+        `.trim();
 
-      await fetch('/api/telegram', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: telegramMessage })
-      });
-    } catch (telegramError) {
-      console.error('Telegram error:', telegramError);
-      // Don't fail the order if Telegram fails
-    }
-    // ========== END TELEGRAM NOTIFICATION ==========
-    
-    // Show beautiful modal instead of alert
-    setOrderData(order);
-    setShowOrderModal(true);
-    setIsSubmitting(false);
-    setForm({ name: '', phone: '', address: '', quantity: 1 });
-    
-    // Auto redirect after 5 seconds
-    setTimeout(() => {
-      setShowOrderModal(false);
-      router.push('/');
-    }, 5000);
-    
-  } catch (error) {
-    alert('Error placing order: ' + error.message);
-    setIsSubmitting(false);
-  }
-};
+        await fetch('/api/telegram', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: telegramMessage })
+        });
+      } catch (telegramError) {
+        console.error('Telegram error:', telegramError);
+        // Don't fail the order if Telegram fails
+      }
+      
       // Show beautiful modal instead of alert
       setOrderData(order);
       setShowOrderModal(true);
@@ -345,7 +328,6 @@ export default function ProductDetail() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          {/* Dark Mode Toggle */}
           <motion.button
             onClick={toggleDarkMode}
             whileHover={{ scale: 1.1, rotate: 15 }}
