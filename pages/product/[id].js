@@ -78,6 +78,47 @@ export default function ProductDetail() {
       existing.push(order);
       localStorage.setItem('orders', JSON.stringify(existing));
       
+       try {
+      const telegramMessage = `
+📦 <b>New Order Alert!</b>
+👤 Customer: ${order.name}
+📱 Phone: ${order.phone}
+📍 Address: ${order.address}
+🎁 Product: ${order.product}
+🔢 Quantity: ${order.quantity}
+💰 Total: ETB ${order.total}
+🕐 Time: ${new Date().toLocaleString()}
+🔗 View: https://hawassagift.shop/admin
+      `.trim();
+
+      await fetch('/api/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: telegramMessage })
+      });
+    } catch (telegramError) {
+      console.error('Telegram error:', telegramError);
+      // Don't fail the order if Telegram fails
+    }
+    // ========== END TELEGRAM NOTIFICATION ==========
+    
+    // Show beautiful modal instead of alert
+    setOrderData(order);
+    setShowOrderModal(true);
+    setIsSubmitting(false);
+    setForm({ name: '', phone: '', address: '', quantity: 1 });
+    
+    // Auto redirect after 5 seconds
+    setTimeout(() => {
+      setShowOrderModal(false);
+      router.push('/');
+    }, 5000);
+    
+  } catch (error) {
+    alert('Error placing order: ' + error.message);
+    setIsSubmitting(false);
+  }
+};
       // Show beautiful modal instead of alert
       setOrderData(order);
       setShowOrderModal(true);
