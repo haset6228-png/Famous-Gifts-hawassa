@@ -15,6 +15,7 @@ export default function ProductDetail() {
   const [darkMode, setDarkMode] = useState(true);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [orderData, setOrderData] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -32,8 +33,6 @@ export default function ProductDetail() {
       
       if (!error && data) {
         setProduct(data);
-        console.log('Product data:', data);
-        console.log('Images:', data.images);
       }
       setLoading(false);
     } catch (error) {
@@ -66,19 +65,16 @@ export default function ProductDetail() {
     };
     
     try {
-      // Save to Supabase (cloud)
       const { error } = await supabase
         .from('orders')
         .insert([order]);
       
       if (error) throw error;
       
-      // Also save to localStorage as backup
       const existing = JSON.parse(localStorage.getItem('orders') || '[]');
       existing.push(order);
       localStorage.setItem('orders', JSON.stringify(existing));
       
-      // Send Telegram Alert
       try {
         const telegramMessage = `
 📦 <b>New Order Alert!</b>
@@ -99,16 +95,13 @@ export default function ProductDetail() {
         });
       } catch (telegramError) {
         console.error('Telegram error:', telegramError);
-        // Don't fail the order if Telegram fails
       }
       
-      // Show beautiful modal instead of alert
       setOrderData(order);
       setShowOrderModal(true);
       setIsSubmitting(false);
       setForm({ name: '', phone: '', address: '', quantity: 1 });
       
-      // Auto redirect after 5 seconds
       setTimeout(() => {
         setShowOrderModal(false);
         router.push('/');
@@ -120,6 +113,43 @@ export default function ProductDetail() {
     }
   };
 
+  // Share function
+  const shareProduct = async () => {
+    const shareData = {
+      title: product.name,
+      text: `Check out ${product.name} - ETB ${product.price} on Famous Gifts Hawassa! 🎁`,
+      url: `https://hawassagift.shop/product/${product.id}`
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Share cancelled');
+      }
+    } else {
+      setShowShareModal(true);
+    }
+  };
+
+  const copyToClipboard = () => {
+    const url = `https://hawassagift.shop/product/${product.id}`;
+    navigator.clipboard?.writeText(url).then(() => {
+      alert('Link copied to clipboard! 📋');
+      setShowShareModal(false);
+    }).catch(() => {
+      // Fallback
+      const textarea = document.createElement('textarea');
+      textarea.value = url;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      alert('Link copied to clipboard! 📋');
+      setShowShareModal(false);
+    });
+  };
+
   if (loading) {
     return (
       <div style={{
@@ -128,6 +158,7 @@ export default function ProductDetail() {
         fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
         padding: '12px'
       }}>
+        {/* Skeleton loading code */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -264,7 +295,7 @@ export default function ProductDetail() {
     );
   }
 
-  // FIX: Properly handle images array
+  // Fix images array
   let images = [];
   if (product.images) {
     if (Array.isArray(product.images)) {
@@ -385,6 +416,7 @@ export default function ProductDetail() {
         </div>
       </nav>
 
+      {/* Product Detail - Improved Gallery */}
       <div style={{
         maxWidth: '100%',
         margin: '0 auto',
@@ -394,10 +426,13 @@ export default function ProductDetail() {
         boxShadow: darkMode ? '0 5px 30px rgba(0,0,0,0.3)' : '0 5px 30px rgba(0,0,0,0.06)',
         border: darkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255, 105, 180, 0.1)'
       }}>
+        {/* Gallery Section - Improved */}
         <div style={{
-          background: darkMode ? 'rgba(30, 30, 50, 0.5)' : '#fafafa',
+          background: darkMode ? 'rgba(20, 20, 40, 0.8)' : '#f8f8f8',
           padding: '16px',
+          position: 'relative'
         }}>
+          {/* Tab Switcher */}
           {hasVideo && images.length > 0 && (
             <div style={{
               display: 'flex',
@@ -445,20 +480,33 @@ export default function ProductDetail() {
             </div>
           )}
 
+          {/* Photos Tab - Improved Gallery */}
           {activeTab === 'photos' && (
             <>
-              <div style={{ width: '100%', marginBottom: '12px' }}>
+              {/* Main Image - Larger and centered */}
+              <div style={{ 
+                width: '100%', 
+                marginBottom: '14px',
+                background: darkMode ? 'rgba(10,10,20,0.5)' : 'white',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '320px',
+                position: 'relative'
+              }}>
                 {images.length > 0 ? (
                   <img
                     src={images[selectedImage]}
                     alt={product.name}
+                    loading="lazy"
                     style={{
                       width: '100%',
-                      maxHeight: '300px',
+                      maxHeight: '450px',
                       objectFit: 'contain',
-                      borderRadius: '12px',
-                      background: darkMode ? 'rgba(30,30,50,0.5)' : 'white',
-                      boxShadow: darkMode ? '0 2px 15px rgba(0,0,0,0.2)' : '0 2px 15px rgba(0,0,0,0.05)'
+                      padding: '10px',
+                      transition: 'all 0.3s ease'
                     }}
                     onError={(e) => {
                       console.log('Image failed to load:', images[selectedImage]);
@@ -470,24 +518,46 @@ export default function ProductDetail() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    height: '250px',
+                    height: '320px',
                     fontSize: '5rem',
                     background: darkMode ? 'rgba(30,30,50,0.5)' : '#FFF0F5',
-                    borderRadius: '12px'
+                    borderRadius: '12px',
+                    width: '100%'
                   }}>
                     🎁
                   </div>
                 )}
+
+                {/* Image counter badge */}
+                {images.length > 1 && (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '16px',
+                    right: '16px',
+                    background: 'rgba(0,0,0,0.6)',
+                    backdropFilter: 'blur(10px)',
+                    color: 'white',
+                    padding: '4px 14px',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: '600'
+                  }}>
+                    {selectedImage + 1} / {images.length}
+                  </div>
+                )}
               </div>
 
+              {/* Thumbnails - Scrollable with better styling */}
               {images.length > 1 && (
                 <div style={{
                   display: 'flex',
-                  gap: '8px',
+                  gap: '10px',
                   overflowX: 'auto',
                   width: '100%',
-                  padding: '4px 0',
-                  WebkitOverflowScrolling: 'touch'
+                  padding: '6px 2px 10px',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'thin',
+                  scrollSnapType: 'x mandatory'
                 }}>
                   {images.map((img, index) => (
                     <div
@@ -495,28 +565,56 @@ export default function ProductDetail() {
                       onClick={() => setSelectedImage(index)}
                       style={{
                         flexShrink: 0,
-                        width: '60px',
-                        height: '60px',
-                        borderRadius: '10px',
+                        width: '80px',
+                        height: '80px',
+                        borderRadius: '12px',
                         overflow: 'hidden',
                         cursor: 'pointer',
-                        border: selectedImage === index ? '3px solid #FF1493' : darkMode ? '2px solid rgba(255,255,255,0.1)' : '2px solid transparent',
-                        transition: 'all 0.3s ease'
+                        border: selectedImage === index ? '3px solid #FF1493' : darkMode ? '2px solid rgba(255,255,255,0.08)' : '2px solid transparent',
+                        boxShadow: selectedImage === index ? '0 0 20px rgba(255,20,147,0.3)' : 'none',
+                        transition: 'all 0.3s ease',
+                        scrollSnapAlign: 'start',
+                        position: 'relative'
                       }}
                     >
                       <img
                         src={img}
                         alt={'Thumbnail ' + index}
+                        loading="lazy"
                         style={{
                           width: '100%',
                           height: '100%',
-                          objectFit: 'cover'
+                          objectFit: 'cover',
+                          transition: 'transform 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (selectedImage !== index) {
+                            e.target.style.transform = 'scale(1.05)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.transform = 'scale(1)';
                         }}
                         onError={(e) => {
                           console.log('Thumbnail failed to load:', img);
                           e.target.style.display = 'none';
                         }}
                       />
+                      {selectedImage === index && (
+                        <div style={{
+                          position: 'absolute',
+                          bottom: '4px',
+                          right: '4px',
+                          background: '#FF1493',
+                          color: 'white',
+                          fontSize: '0.5rem',
+                          padding: '2px 6px',
+                          borderRadius: '10px',
+                          fontWeight: '600'
+                        }}>
+                          ●
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -524,16 +622,26 @@ export default function ProductDetail() {
             </>
           )}
 
+          {/* Video Tab */}
           {activeTab === 'video' && hasVideo && (
-            <div style={{ width: '100%' }}>
+            <div style={{ 
+              width: '100%',
+              background: darkMode ? 'rgba(10,10,20,0.5)' : '#f0f0f0',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: '320px'
+            }}>
               <video
                 src={product.video}
                 style={{
                   width: '100%',
-                  maxHeight: '300px',
+                  maxHeight: '450px',
                   objectFit: 'contain',
-                  borderRadius: '12px',
-                  background: darkMode ? 'rgba(30,30,50,0.5)' : '#f0f0f0'
+                  background: darkMode ? 'rgba(10,10,20,0.5)' : '#f0f0f0',
+                  padding: '10px'
                 }}
                 controls
                 autoPlay
@@ -543,23 +651,50 @@ export default function ProductDetail() {
           )}
         </div>
 
+        {/* Product Info */}
         <div style={{
           padding: '20px 18px'
         }}>
-          <span style={{
-            background: darkMode ? 'rgba(255,20,147,0.2)' : '#FFF0F5',
-            padding: '3px 14px',
-            borderRadius: '16px',
-            fontSize: '0.7rem',
-            color: '#FF1493',
-            fontWeight: '600',
-            display: 'inline-block',
-            marginBottom: '10px',
-            letterSpacing: '0.5px',
-            textTransform: 'uppercase'
-          }}>
-            {product.category || 'Gifts'}
-          </span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <span style={{
+                background: darkMode ? 'rgba(255,20,147,0.2)' : '#FFF0F5',
+                padding: '3px 14px',
+                borderRadius: '16px',
+                fontSize: '0.7rem',
+                color: '#FF1493',
+                fontWeight: '600',
+                display: 'inline-block',
+                marginBottom: '10px',
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase'
+              }}>
+                {product.category || 'Gifts'}
+              </span>
+            </div>
+            {/* Share Button */}
+            <motion.button
+              onClick={shareProduct}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              style={{
+                background: darkMode ? 'rgba(255,255,255,0.05)' : '#f0f0f0',
+                border: darkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid #eee',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '1.2rem',
+                color: darkMode ? '#f0f0f0' : '#333',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              📤
+            </motion.button>
+          </div>
 
           <h1 style={{
             fontSize: '1.6rem',
@@ -740,7 +875,7 @@ export default function ProductDetail() {
         <p style={{ fontSize: '0.7rem', opacity: 0.7 }}>Call us: +251 90 949 5969</p>
       </footer>
 
-      {/* ========== BEAUTIFUL ORDER CONFIRMATION MODAL ========== */}
+      {/* ========== ORDER CONFIRMATION MODAL ========== */}
       <AnimatePresence>
         {showOrderModal && orderData && (
           <motion.div
@@ -877,6 +1012,198 @@ export default function ProductDetail() {
                 }}
               >
                 Continue Shopping 🛍️
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ========== SHARE MODAL ========== */}
+      <AnimatePresence>
+        {showShareModal && product && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'rgba(0,0,0,0.6)',
+              backdropFilter: 'blur(10px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 3000,
+              padding: '20px'
+            }}
+            onClick={() => setShowShareModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 30 }}
+              transition={{ type: 'spring', damping: 20 }}
+              style={{
+                maxWidth: '420px',
+                width: '100%',
+                background: darkMode ? '#2a2a3e' : 'white',
+                borderRadius: '24px',
+                padding: '35px 30px',
+                boxShadow: '0 30px 80px rgba(0,0,0,0.3)',
+                border: '2px solid #FF1493',
+                textAlign: 'center'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 style={{ 
+                color: '#FF1493', 
+                fontSize: '1.3rem', 
+                fontWeight: '700',
+                marginBottom: '10px'
+              }}>
+                📤 Share Product
+              </h2>
+              
+              <p style={{
+                color: darkMode ? '#ccc' : '#555',
+                fontSize: '0.9rem',
+                marginBottom: '20px'
+              }}>
+                Share this product with your friends and family!
+              </p>
+
+              {/* Share URL */}
+              <div style={{
+                display: 'flex',
+                gap: '10px',
+                background: darkMode ? 'rgba(255,255,255,0.05)' : '#f5f5f5',
+                padding: '10px 14px',
+                borderRadius: '12px',
+                marginBottom: '20px',
+                alignItems: 'center'
+              }}>
+                <input
+                  type="text"
+                  value={`https://hawassagift.shop/product/${product.id}`}
+                  readOnly
+                  style={{
+                    flex: 1,
+                    border: 'none',
+                    background: 'transparent',
+                    color: darkMode ? '#ccc' : '#333',
+                    fontSize: '0.8rem',
+                    outline: 'none'
+                  }}
+                />
+                <button
+                  onClick={copyToClipboard}
+                  style={{
+                    background: 'linear-gradient(135deg, #FF1493, #FF69B4)',
+                    color: 'white',
+                    border: 'none',
+                    padding: '6px 16px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '0.8rem'
+                  }}
+                >
+                  Copy
+                </button>
+              </div>
+
+              {/* Share Buttons */}
+              <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => {
+                    window.open(`https://t.me/share/url?url=https://hawassagift.shop/product/${product.id}&text=Check out ${product.name} from Famous Gifts! 🎁`, '_blank');
+                  }}
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    border: 'none',
+                    background: '#0088cc',
+                    color: 'white',
+                    fontSize: '1.8rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  ✈️
+                </motion.button>
+                
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => {
+                    window.open(`https://wa.me/?text=Check out ${product.name} from Famous Gifts! 🎁 https://hawassagift.shop/product/${product.id}`, '_blank');
+                  }}
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    border: 'none',
+                    background: '#25D366',
+                    color: 'white',
+                    fontSize: '1.8rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  💬
+                </motion.button>
+                
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => {
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=https://hawassagift.shop/product/${product.id}`, '_blank');
+                  }}
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '50%',
+                    border: 'none',
+                    background: '#1877F2',
+                    color: 'white',
+                    fontSize: '1.8rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  📘
+                </motion.button>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowShareModal(false)}
+                style={{
+                  marginTop: '20px',
+                  background: darkMode ? 'rgba(255,255,255,0.1)' : '#f0f0f0',
+                  color: darkMode ? '#ccc' : '#333',
+                  border: 'none',
+                  padding: '10px 30px',
+                  borderRadius: '30px',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  width: '100%'
+                }}
+              >
+                Close
               </motion.button>
             </motion.div>
           </motion.div>
